@@ -11,6 +11,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
 
     <style>
+        .reveal {
+            font-size: 30px;
+        }
+
+        .reveal h1 { font-size: 2.0em; }
+        .reveal h2 { font-size: 1.5em; }
+        .reveal h3 { font-size: 1.2em; }
+
+        .reveal ul, .reveal ol {
+            font-size: 0.9em;
+        }
+        .reveal pre code {
+            font-size: 0.7em;
+            line-height: 1.2em;
+        }
         /* 이미지 스타일 조정 */
         .reveal section img {
             border: none;
@@ -73,7 +88,7 @@
 
 ### 🛡️ VPN과 내부망 (Intranet)
 
->>> "왜 Postman이 집에서는 안 되고 회사에서만 될까?"
+> "왜 Postman은 vpn연결을 해야만 될까?"
 
 <img src="images/vpn_tunnel.png" alt="VPN Tunneling">
 
@@ -85,7 +100,7 @@
 
 ### 🕵️‍♀️ Forward Proxy (내 대리인)
 
-> "Charles / Proxyman은 어떻게 데이터를 볼까?"
+> "Charles Proxy는 어떻게 데이터를 볼까?"
 
 <img src="images/proxy_server.png" alt="Forward Proxy Server">
 
