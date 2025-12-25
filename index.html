@@ -12,12 +12,12 @@
 
     <style>
         /* 다이어그램 스타일 조정 */
-        .mermaid {
+        .reveal pre code.mermaid {
             background: white;
             border-radius: 10px;
-            padding: 10px;
-            margin: auto;
-            max-width: 90%; 
+            padding: 20px;
+            text-align: center;
+            color: #333; /* 다이어그램 텍스트 색상 */
         }
         /* 폰트 및 레이아웃 조정 */
         .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
@@ -67,13 +67,13 @@
                     <li><strong>Server:</strong> 응답하는 백엔드</li>
                     <li><strong>DNS:</strong> 주소록 (`naver.com` → IP)</li>
                 </ul>
-                <div class="mermaid">
-                graph LR
-                    Client((Client)) -->|Request| Server[Server]
-                    Server -->|Response| Client
-                    style Client fill:#f9f,stroke:#333
-                    style Server fill:#bbf,stroke:#333
-                </div>
+<pre><code class="mermaid">
+graph LR
+    Client((Client)) -->|Request| Server[Server]
+    Server -->|Response| Client
+    style Client fill:#f9f,stroke:#333
+    style Server fill:#bbf,stroke:#333
+</code></pre>
             </section>
 
             <section>
@@ -125,229 +125,3 @@
                         </tr>
                     </tbody>
                 </table>
-            </section>
-        </section>
-
-        <section>
-            <section>
-                <h2>3. 숲을 보자 : 서버 아키텍처의 진화</h2>
-            </section>
-
-            <section>
-                <h3>Monolithic vs MSA</h3>
-                <div class="mermaid">
-                graph TD
-                    subgraph Monolithic [한 덩어리]
-                    M[UI + 회원 + 주문 + 결제]
-                    end
-                
-                    subgraph MSA [기능별 분리]
-                    GW[Gateway] --> U[회원 서버]
-                    GW --> O[주문 서버]
-                    GW --> P[결제 서버]
-                    end
-                    
-                    style M fill:#ff9999,color:#000
-                    style GW fill:#ffff99,color:#000
-                    style U fill:#fff,color:#000
-                    style O fill:#fff,color:#000
-                    style P fill:#fff,color:#000
-                </div>
-                <ul>
-                    <li><strong>Monolithic:</strong> 관리 단순 / 전체 배포 필요</li>
-                    <li><strong>MSA:</strong> 장애 격리 / 구조 복잡</li>
-                </ul>
-            </section>
-        </section>
-
-        <section>
-            <section>
-                <h2>4. Deep Dive : Java 백엔드 구조</h2>
-            </section>
-
-            <section>
-                <h3>Java Spring Boot 계층 구조</h3>
-                <p>요청이 들어오면 공장이 가동됩니다.</p>
-                <div class="mermaid">
-                graph LR
-                    Req(Request) --> C[Controller]
-                    C -->|DTO| S[Service]
-                    S -->|Entity| R[Repository]
-                    R -->|SQL| D[(Database)]
-                    
-                    style C fill:#f96,color:#000
-                    style S fill:#9f6,color:#000
-                    style R fill:#69f,color:#000
-                    style D fill:#ff9,color:#000
-                </div>
-                <ol>
-                    <li><strong>Controller:</strong> 손님 맞이 (요청 검증)</li>
-                    <li><strong>Service:</strong> 요리사 (비즈니스 로직)</li>
-                    <li><strong>Repository:</strong> 창고지기 (DB 접근)</li>
-                </ol>
-            </section>
-
-            <section>
-                <h3>데이터 흐름과 DTO</h3>
-                <p><strong>DTO (Data Transfer Object):</strong> 데이터를 나르기 위한 바구니</p>
-                <ol>
-                    <li><strong>Request (JSON):</strong> <code>{"id": "user1"}</code></li>
-                    <li><strong>Controller:</strong> JSON ➡️ <strong>DTO</strong> 변환</li>
-                    <li><strong>Service:</strong> DTO ➡️ <strong>Entity</strong> 변환 후 로직 수행</li>
-                    <li><strong>Repository:</strong> Entity를 DB에 저장</li>
-                </ol>
-            </section>
-
-            <section>
-                <h3>MSA 서버 간 통신 방식</h3>
-                <p>"주문 서버"가 "상품 서버"에게 데이터를 요청할 때</p>
-                <ul>
-                    <li><strong>Sync (동기) - Feign Client:</strong>
-                        <ul>
-                            <li>메소드 호출하듯 HTTP 요청 (<code>productClient.get()</code>)</li>
-                            <li>직관적이나 장애 전파 위험</li>
-                        </ul>
-                    </li>
-                    <li><strong>Async (비동기) - Kafka/RabbitMQ:</strong>
-                        <ul>
-                            <li>메시지 큐에 이벤트 발행</li>
-                            <li>느슨한 결합, 장애 격리</li>
-                        </ul>
-                    </li>
-                </ul>
-            </section>
-        </section>
-
-        <section>
-            <section>
-                <h2>5. MSA 구조와 응답 처리</h2>
-            </section>
-
-            <section>
-                <h3>MSA의 관문, API Gateway</h3>
-                <blockquote>"앱은 문지기(Gateway)만 알면 된다."</blockquote>
-                <div class="mermaid">
-                graph TD
-                    App((App)) --> GW[API Gateway]
-                    GW -->|/users| US[User Service]
-                    GW -->|/orders| OS[Order Service]
-                    GW -->|/products| PS[Product Service]
-                    
-                    style GW fill:#f9f,stroke:#333,stroke-width:4px,color:#000
-                </div>
-                <ul>
-                    <li><strong>Routing:</strong> 주소에 따라 적절한 서버로 연결</li>
-                    <li><strong>Auth:</strong> 인증/인가 (입구 컷)</li>
-                </ul>
-            </section>
-
-            <section>
-                <h3>Response Aggregation (비빔밥 패턴)</h3>
-                <ul>
-                    <li><strong>상황:</strong> 메인 화면 (내 정보 + 추천 상품 + 공지)</li>
-                    <li><strong>해결 (Gateway):</strong>
-                        <ol>
-                            <li>앱은 Gateway에 1번 요청 (<code>GET /main</code>)</li>
-                            <li>Gateway가 내부 서버 3곳을 찔러 데이터를 모음</li>
-                            <li>하나의 JSON으로 합쳐서 응답</li>
-                        </ol>
-                    </li>
-                </ul>
-            </section>
-        </section>
-
-        <section>
-            <section>
-                <h2>6. 실전 분석 : HTTP Status Code</h2>
-            </section>
-
-            <section>
-                <h3>Status Code 분류</h3>
-                <div class="mermaid">
-                graph TD
-                    S{Status Code}
-                    S --> 2xx[200 OK: 성공]
-                    S --> 4xx[400 Bad Request: 클라이언트 과실]
-                    S --> 5xx[500 Internal Error: 서버 과실]
-                    
-                    style 2xx fill:#9f9,color:#000
-                    style 4xx fill:#f99,color:#000
-                    style 5xx fill:#f66,color:#000
-                </div>
-            </section>
-
-            <section>
-                <h3>🚨 400 Bad Request</h3>
-                <ul>
-                    <li><strong>의미:</strong> 문법 오류 또는 필수 정보 누락</li>
-                    <li><strong>체크리스트:</strong>
-                        <ul>
-                            <li>필수 파라미터(<code>user_id</code>) 누락?</li>
-                            <li>타입 불일치 (숫자에 문자열)?</li>
-                            <li>DTO 유효성 검사(<code>@NotNull</code>) 실패?</li>
-                        </ul>
-                    </li>
-                </ul>
-            </section>
-
-            <section>
-                <h3>🔐 401 vs 403</h3>
-                <ul>
-                    <li><strong>401 Unauthorized:</strong>
-                        <br>"신분증 없음" (로그인 풀림, 토큰 만료)
-                    </li>
-                    <li><strong>403 Forbidden:</strong>
-                        <br>"신분증은 있는데 접근 불가" (관리자 페이지 등)
-                    </li>
-                </ul>
-            </section>
-        </section>
-
-        <section>
-            <section>
-                <h2>7. 결론 (Wrap-up)</h2>
-            </section>
-
-            <section>
-                <h3>QC/실무자 체크리스트</h3>
-                <ol>
-                    <li><strong>스펙 확인:</strong> 에러 시 Swagger 문서 대조</li>
-                    <li><strong>도구 활용:</strong> Charles, ProxyMan으로 실제 JSON 확인</li>
-                    <li><strong>구조적 의심:</strong> MSA 구조상 특정 서비스만 느린지 확인</li>
-                </ol>
-            </section>
-
-            <section>
-                <h3>Q & A</h3>
-                <p>감사합니다.</p>
-            </section>
-        </section>
-
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-
-<script>
-    // Mermaid 초기화
-    mermaid.initialize({
-        startOnLoad: true,
-        theme: 'default',
-        securityLevel: 'loose',
-    });
-
-    // Reveal.js 초기화
-    Reveal.initialize({
-        controls: true,
-        progress: true,
-        center: true,
-        hash: true,
-        slideNumber: true,
-        plugins: [ RevealHighlight ] // Markdown 플러그인 제외
-    });
-</script>
-
-</body>
-</html>
