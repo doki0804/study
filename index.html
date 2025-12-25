@@ -82,7 +82,7 @@
 * **Server:** 응답하는 백엔드
 * **DNS:** 주소록 (`naver.com` → IP)
 
-<img src="images/client_server.png" alt="Client Server Architecture">
+<img src="images/client_server.jpeg" alt="Client Server Architecture">
 
 --
 
@@ -90,7 +90,7 @@
 
 > "왜 Postman은 vpn연결을 해야만 될까?"
 
-<img src="images/vpn_tunnel.png" alt="VPN Tunneling">
+<img src="images/vpn_tunnel.jpeg" alt="VPN Tunneling">
 
 * **Public Network:** 누구나 접속 가능.
 * **Private Network:** <span class="vpn-secure">방화벽(Firewall)</span> 뒤에 숨겨진 서버들.
@@ -102,7 +102,7 @@
 
 > "Charles Proxy는 어떻게 데이터를 볼까?"
 
-<img src="images/proxy_server.png" alt="Forward Proxy Server">
+<img src="images/proxy_server.jpeg" alt="Forward Proxy Server">
 
 * **역할:** 클라이언트(앱) 대신 요청을 보내주는 중계자.
 * **용도:** 패킷 캡처, IP 우회, 캐싱.
@@ -114,7 +114,7 @@
 
 > "서버 앞단에 서있는 Nginx, Load Balancer"
 
-<img src="images/reverse_proxy.png" alt="Reverse Proxy Server">
+<img src="images/reverse_proxy.jpeg" alt="Reverse Proxy Server">
 
 * **역할:** <span class="proxy-rev">실제 서버(Java)</span>를 숨기고 요청을 대신 받음.
 * **주요 기능:** Load Balancing(부하 분산), 보안, SSL 처리.
@@ -149,7 +149,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 ### Monolithic vs MSA
 
-<img src="images/mono_vs_msa.png" alt="Monolithic vs MSA">
+<img src="images/mono_vs_msa.jpeg" alt="Monolithic vs MSA">
 
 * **Monolithic:** 관리 단순 / 전체 배포 필요
 * **MSA:** 장애 격리 / 구조 복잡
@@ -164,7 +164,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 요청이 들어오면 공장이 가동됩니다.
 
-<img src="images/java_layered_arch.png" alt="Java Layered Architecture">
+<img src="images/java_layered_arch.jpeg" alt="Java Layered Architecture">
 
 1. **Controller:** 손님 맞이 (요청 검증)
 2. **Service:** 요리사 (비즈니스 로직)
@@ -206,7 +206,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 > "가장 기본적인 역할: 교통 정리"
 
-![API Gateway Roles](images/gateway_roles.png)
+![API Gateway Roles](images/gateway_roles.jpeg)
 
 * **Client:** `/orders` 요청 ➡️ **Gateway** ➡️ **주문 서버**
 * **역할:** 주소를 보고 적절한 서버를 찾아 연결해 주는 **중계자**.
@@ -229,7 +229,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 > "주문 서버가 직접 데이터를 모으는 경우도 있지 않나요?" ➡️ **맞습니다!**
 
-![Service Aggregator](images/service_aggregator.png)
+![Service Aggregator](images/service_aggregator.jpeg)
 
 * **상황:** 주문 내역(Order) 안에 상품명(Product)과 주소(User)가 꼭 포함되어야 할 때.
 * **동작:**
@@ -254,7 +254,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 > "주문 서버가 회원 DB를 직접 조회하면 안 되나요?" ➡️ **안 됩니다.**
 
-<img src="images/database_msa.png" alt="Database per Service">
+<img src="images/database_msa.jpeg" alt="Database per Service">
 
 * **원칙:** 각 마이크로서비스는 **자신만의 DB**를 가진다.
 * **Polyglot:** 서비스 목적에 따라 알맞은 DB 사용 (RDB, NoSQL 등).
@@ -265,7 +265,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 > "내 지난 주문 내역은 자주 안 바뀌니까, <span class="cache-fast">메모리(Redis)</span>에 저장해두자."
 
-<img src="images/caching_flow.png" alt="Caching Strategy Flow">
+<img src="images/caching_flow.jpeg" alt="Caching Strategy Flow">
 
 1. **첫 요청 (Cache Miss):** DB에서 지난 1년 치 주문 내역을 긁어옴 (느림) ➡️ 캐시에 저장.
 2. **이후 요청 (Cache Hit):** 메모리에서 바로 꺼내줌 (빠름).
@@ -304,7 +304,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 ### Status Code 분류
 
-<img src="images/status_code.png" alt="HTTP Status Codes">
+<img src="images/status_code.jpeg" alt="HTTP Status Codes">
 
 --
 
