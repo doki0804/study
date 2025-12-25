@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>앱 서비스 아키텍처와 네트워크 완전 정복</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css" id="theme">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+</head>
+<body>
+
+<div class="reveal">
+    <div class="slides">
+        <section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+            <script type="text/template">
+
+# 앱 서비스 아키텍처와<br>네트워크 완전 정복
+### From Basic Network to MSA Deep Dive
+
+<br>
+<small>네트워크 기초부터 MSA 통신 구조와 에러 분석까지</small>
+
+---
+
+## 1. 인트로 (Introduction)
+
+--
+
+### 왜 이 지식이 필요한가?
+
+* **빙산의 일각:** 앱 화면(Frontend) 뒤의 거대한 시스템(Network, Backend, DB) 이해
+* **기대 효과:**
+    * 개발자와의 소통 비용 감소 <br>("안 돼요" ➡️ "400 에러입니다")
+    * 이슈 발생 구간의 빠른 판단 (앱 vs 서버 vs 네트워크)
+
+---
+
+## 2. 기본기 : 네트워크와 데이터의 대화
+
+--
+
+### 네트워크 통신의 기본 요소
+
+* **IP 주소:** 컴퓨터의 고유 주소 (`192.168.0.1`)
+* **도메인(DNS):** 사람이 읽기 쉬운 주소 (`naver.com`)
+* **클라이언트(Client):** 요청하는 자 (App/Web)
+* **서버(Server):** 응답하는 자 (Backend)
+
+<br>
+<div style="background:#333; padding:10px; border-radius:10px;">
+🌐 Client (Request) ⇄ Server (Response)
+</div>
+
+--
+
+### HTTP와 패킷 구조
+
+* **HTTP:** 데이터를 주고받기 위한 약속(Protocol)
+* **패킷(Packet):**
+    * **Header:** 송장 (보내는 사람, 받는 사람, 토큰)
+    * **Body:** 내용물 (실제 데이터 JSON 등)
+
+--
+
+### 동기 vs 비동기
+
+* **동기 (Synchronous):**
+    * 요청 후 멈춰서 기다림 (UI 멈춤 가능성)
+* **비동기 (Asynchronous):**
+    * 요청 보내고 다른 일 처리 (Non-blocking)
+    * *예: 좋아요 누르자마자 하트가 빨개짐 (Optimistic UI)*
+
+---
+
+## 3. 숲을 보자 : 서버 아키텍처의 진화
+
+--
+
+### Monolithic vs MSA
+
+| 구분 | Monolithic | MSA (Microservices) |
+|:---:|:---:|:---:|
+| **구조** | 하나의 거대한 덩어리 | 기능별로 쪼개짐 |
+| **장점** | 관리 단순 | 장애 격리, 유연함 |
+| **단점** | 전체 배포 필요 | 구조가 복잡함 |
+
+---
+
+## 4. Deep Dive : MSA 백엔드
+
+--
+
+### MSA의 관문, API Gateway
+
+> "앱은 수십 개의 서버 주소를 다 알 필요 없다.<br>문지기(Gateway)만 알면 된다."
+
+* **Routing:** `/orders` → 주문 서버, `/users` → 회원 서버
+* **Auth:** "로그인한 유저인가?" (입구 컷)
+
+--
+
+### Response Aggregation (비빔밥 패턴)
+
+* **상황:** 메인 화면 (내 정보 + 추천 상품 + 공지)
+* **BAD:** 앱이 API를 3번 호출
+* **GOOD (Gateway):** 1. 앱은 Gateway에 1번 요청
+    2. Gateway가 데이터를 모음(Aggregation)
+    3. 하나의 JSON으로 합쳐서 응답
+
+--
+
+### 서버 간 통신 (동기 vs 비동기)
+
+* **상황:** 주문 완료 ➡️ 배송 준비 요청
+* **동기 (HTTP):** 배송 서버 응답 올 때까지 주문 서버 대기
+* **비동기 (Message Queue):** * 주문 서버는 "주문 됨!" 메시지만 던짐
+    * 배송 서버가 나중에 가져가서 처리
+
+---
+
+## 5. 실전 분석 : HTTP Status Code
+
+--
+
+### Status Code 큰 그림
+
+* **2xx (Success):** 정상 (화면 이상하면 앱 버그 의심)
+* **4xx (Client Error):** "네가(App) 잘못 보냈어"
+* **5xx (Server Error):** "내가(Server) 터졌어"
+
+--
+
+### 🚨 400 Bad Request (가장 중요)
+
+* **의미:** 문법 오류 또는 필수 정보 누락
+* **체크리스트:**
+    * 필수 파라미터(`user_id`) 누락?
+    * 타입 불일치 (숫자에 문자열)?
+    * 오타?
+
+--
+
+### 🔐 401 vs 403
+
+* **401 Unauthorized:**
+    * "신분증 없음" (로그인 풀림, 토큰 만료)
+* **403 Forbidden:**
+    * "신분증은 있는데 접근 불가" (관리자 페이지 접근 시도)
+
+--
+
+### 기타 특수 에러
+
+* **404 Not Found:** URL 오타, 삭제된 데이터
+* **409 Conflict:** 데이터 충돌 (이미 가입된 이메일)
+* **429 Too Many Requests:** 도배, 따닥(Double Click) 방지
+
+---
+
+## 6. 결론 (Wrap-up)
+
+--
+
+### QC/실무자 체크리스트
+
+1. **스펙 확인:** 에러 시 Swagger 문서 대조
+2. **도구 활용:** Charles, ProxyMan으로 실제 JSON 확인
+3. **구조적 의심:** MSA 구조상 특정 서비스만 느린지 확인
+
+--
+
+### Q & A
+
+감사합니다.
+
+            </script>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+
+<script>
+    // Reveal.js 초기화
+    Reveal.initialize({
+        controls: true, // 우측 하단 컨트롤러 표시
+        progress: true, // 하단 진행바 표시
+        center: true,   // 슬라이드 중앙 정렬
+        hash: true,     // URL에 슬라이드 번호 표시
+
+        // 플러그인 설정
+        plugins: [ RevealMarkdown, RevealHighlight ]
+    });
+</script>
+
+</body>
+</html>
