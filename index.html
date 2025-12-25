@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>앱 서비스 아키텍처와 네트워크</title>
+    <title>앱 서비스 아키텍처와 네트워크 완전 정복</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css" id="theme">
@@ -20,6 +20,8 @@
         }
         /* 텍스트 강조 색상 */
         .highlight { color: #42affa; font-weight: bold; }
+        .param-path { color: #ff6b6b; font-weight: bold; } /* Path Param 색상 */
+        .param-query { color: #4ecdc4; font-weight: bold; } /* Query Param 색상 */
     </style>
 </head>
 <body>
@@ -49,7 +51,7 @@
 
 ---
 
-## 2. 네트워크와 RESTful
+## 네트워크와 RESTful
 
 --
 
@@ -74,18 +76,25 @@
 
 --
 
-### RESTful 디자인 예시
+### 🔍 Path vs Query Parameter
 
-| 행위 | 나쁜 예 (Not RESTful) | 좋은 예 (RESTful) |
+API 주소에 데이터를 담아 보내는 두 가지 방법
+
+| 구분 | Path Variable | Query Parameter |
 |:---:|:---|:---|
-| **조회** | POST /getUser | <span class="highlight">GET</span> /users/1 |
-| **생성** | GET /createUser | <span class="highlight">POST</span> /users |
-| **수정** | POST /updateUser | <span class="highlight">PUT</span> /users/1 |
-| **삭제** | GET /deleteUser | <span class="highlight">DELETE</span> /users/1 |
+| **형태** | `/users`<span class="param-path">/10</span> | `/users`<span class="param-query">?active=true</span> |
+| **용도** | 리소스를 **식별**할 때<br>(ID 등) | **정렬, 필터링, 검색**할 때<br>(옵션) |
+| **의미** | "10번 유저" | "활성 상태인 유저들" |
+
+<br>
+<small>
+* <strong>Path:</strong> 없으면 주소가 달라져서 404 에러 발생 가능<br>
+* <strong>Query:</strong> 없어도 기본값으로 동작하는 경우가 많음 (`?` 뒤에 붙음)
+</small>
 
 ---
 
-## 3. 서버 아키텍처의 진화
+## 3. 숲을 보자 : 서버 아키텍처의 진화
 
 --
 
@@ -98,7 +107,7 @@
 
 ---
 
-## 4. Java 백엔드 구조
+## Java 백엔드 구조
 
 --
 
@@ -153,7 +162,7 @@
 
 --
 
-### Response Aggregation (비빔밥 패턴)
+### Response Aggregation
 
 * **상황:** 메인 화면 (내 정보 + 추천 상품 + 공지)
 * **해결 (Gateway):**
@@ -192,11 +201,11 @@
 
 ---
 
-## 7. 결론 (Wrap-up)
+## 7. 결론
 
 --
 
-### QC/실무자 체크리스트
+### 실무자 체크리스트
 
 1. **스펙 확인:** 에러 시 Swagger 문서 대조
 2. **도구 활용:** Charles, ProxyMan으로 실제 JSON 확인
