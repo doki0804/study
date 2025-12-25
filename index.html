@@ -300,7 +300,58 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 ---
 
-## 6. HTTP Status Code
+## 6. 인증과 보안 (JWT)
+
+--
+
+### 🎫 Session vs JWT (Token)
+
+> "MSA에서는 왜 세션 대신 토큰을 쓸까요?"
+
+* **Session (놀이공원 입구 컷):** 매번 매표소(서버) 장부에 내 이름을 확인해야 함. 서버가 늘어나면 장부 공유가 힘듦.
+* **JWT (자유이용권 팔찌):**
+    * 발급받은 <span class="auth-key">팔찌(Token)</span>만 보여주면 어느 놀이기구(서버)든 통과.
+    * 서버는 팔찌가 위조됐는지만 확인하면 됨 (Stateless).
+
+--
+
+### JWT (JSON Web Token) 구조
+
+> "이 토큰 안에 유저 정보가 들어있다고?"
+
+![JWT Structure](images/jwt_structure.png)
+
+1. **Header:** 토큰 타입, 암호화 알고리즘 (`HS256`).
+2. **Payload:** 실제 데이터 (`user_id`, `exp`(만료시간)). **누구나 볼 수 있음!** (비번 넣으면 안 됨).
+3. **Signature:** 위변조 방지용 서명 (서버만 아는 키로 암호화).
+
+--
+
+### 🔄 Access Token & Refresh Token
+
+> "보안 때문에 유효기간을 짧게 하면, 맨날 로그인해야 하잖아요?"
+
+| 종류 | 유효기간 | 용도 | 저장 위치 |
+| :--- | :--- | :--- | :--- |
+| **Access Token** | 짧음 (30분) | 실제 API 요청용 (출입증) | 앱 메모리 |
+| **Refresh Token** | 김 (2주) | 새 Access Token 발급용 (교환권) | 보안 스토리지 |
+
+--
+
+### ⚙️ Silent Refresh (토큰 갱신 흐름)
+
+> "사용자는 로그인이 풀린 줄도 모르게 처리해야 합니다."
+
+![Refresh Token Flow](images/token_flow.png)
+
+1. 앱이 **Access Token**으로 요청 ➡️ **401 Error (만료)**.
+2. 앱이 **Refresh Token**을 보내서 "새 거 주세요" 요청.
+3. 서버가 확인 후 **New Access Token** 발급.
+4. 앱은 새 토큰으로 **재요청** (사용자는 모름).
+
+---
+               
+## 7. HTTP Status Code
 
 --
 
