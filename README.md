@@ -1,23 +1,26 @@
-# 앱 서비스 아키텍처와 네트워크
+# 앱 서비스 아키텍처와<br>네트워크
 
-> **목표:** 네트워크 기초부터 Java 백엔드, MSA 구조, 그리고 데이터 처리(캐싱/배치)까지 앱 서비스의 동작 원리를 이해하여 QC 역량을 강화한다.
+<br>
+<small>네트워크, Proxy, DB, 캐싱, 그리고 배치까지</small>
 
 ---
 
 ## 1. 인트로 (Introduction)
 
+--
+
 ### 왜 이 지식이 필요한가?
 
-* **빙산의 일각:** 우리가 테스트하는 앱 화면(Frontend) 뒤에는 거대한 시스템(Network, Backend, DB)이 존재합니다.
+* **빙산의 일각:** 앱 화면(Frontend) 뒤의 거대한 시스템(Network, Backend, DB) 이해
 * **기대 효과:**
-* 개발자와의 소통 비용 감소 ("안 돼요" ➡️ "400 에러입니다")
-* 데이터 갱신 지연의 원인 파악 (DB 동기화, 캐싱, 배치 등)
-
-
+    * 개발자와의 소통 비용 감소 <br>("안 돼요" ➡️ "400 에러입니다")
+    * 데이터 갱신 지연 원인 파악 (DB 동기화, 캐싱, 배치)
 
 ---
 
 ## 2. 네트워크와 보안
+
+--
 
 ### 네트워크 통신의 기본 요소
 
@@ -25,134 +28,314 @@
 * **Server:** 응답하는 백엔드
 * **DNS:** 주소록 (`naver.com` → IP)
 
+<img src="images/client_server.jpeg" alt="Client Server Architecture">
+
+--
+
 ### 🛡️ VPN과 내부망 (Intranet)
 
-> "왜 Postman이 집에서는 안 되고 회사에서만 될까?"
+> "왜 Postman은 vpn연결을 해야만 될까?"
 
-* **Public Network:** 누구나 접속 가능한 인터넷.
-* **Private Network:** **방화벽(Firewall)** 뒤에 숨겨진 서버들 (Dev/Stage 서버).
-* **VPN:** 외부에서 내부망으로 안전하게 들어가는 **'전용 터널'**.
+<img src="images/vpn_tunnel.jpeg" alt="VPN Tunneling">
+
+* **Public Network:** 누구나 접속 가능.
+* **Private Network:** <span class="vpn-secure">방화벽(Firewall)</span> 뒤에 숨겨진 서버들.
+* **VPN:** 외부에서 내부망으로 들어가는 **'전용 터널'**.
+
+--
 
 ### 🕵️‍♀️ Forward Proxy (내 대리인)
 
-> "Charles / Proxyman은 어떻게 데이터를 볼까?"
+> "Charles Proxy는 어떻게 데이터를 볼까?"
 
-* **역할:** 클라이언트(앱) 대신 인터넷에 요청을 보내주는 중계자.
-* **용도:** 패킷 캡처(QC), IP 우회, 캐싱.
-* **QC 활용:** 앱이 서버로 보내는 요청을 중간에서 가로채서 확인.
+<img src="images/proxy_server.jpeg" alt="Forward Proxy Server">
+
+* **역할:** 클라이언트(앱) 대신 요청을 보내주는 중계자.
+* **용도:** 패킷 캡처, IP 우회, 캐싱.
+* **QC 활용:** 앱이 보내는 요청을 가로채서 확인.
+
+--
 
 ### 🛡️ Reverse Proxy (서버의 보디가드)
 
-> "서버 앞단에 서있는 Nginx, AWS ELB(Load Balancer)"
+> "서버 앞단에 서있는 Nginx, Load Balancer"
 
-* **역할:** **실제 서버(Java)**를 숨기고 인터넷 요청을 대신 받음.
-* **주요 기능:**
-* **Load Balancing:** 트래픽을 여러 서버로 분산.
-* **Security:** 실제 서버 IP 은닉 및 보안.
-* **SSL Termination:** HTTPS 암호화 해독.
+<img src="images/reverse_proxy.jpeg" alt="Reverse Proxy Server">
 
+* **역할:** <span class="proxy-rev">실제 서버(Java)</span>를 숨기고 요청을 대신 받음.
+* **주요 기능:** Load Balancing(부하 분산), 보안, SSL 처리.
+* **에러:** 502(서버 죽음), 504(서버 느림).
 
-* **관련 에러:** `502 Bad Gateway`(서버 죽음), `504 Gateway Timeout`(서버 느림).
+--
 
-### RESTful API와 파라미터
+### RESTful API란?
 
-**RESTful 3요소:** 자원(Resource), 행위(Verb), 표현(Representation)
+* **핵심 3요소:**
+    1. **자원 (Resource):** URI (`/users`)
+    2. **행위 (Verb):** Method (`GET`, `POST`)
+    3. **표현 (Representation):** `JSON`
+
+--
+
+### 🔍 Path vs Query Parameter
+
+API 주소에 데이터를 담아 보내는 두 가지 방법
 
 | 구분 | Path Variable | Query Parameter |
-| --- | --- | --- |
-| **형태** | `/users/10` | `/users?active=true` |
-| **용도** | 리소스를 **식별**할 때 (ID 등) | **정렬, 필터링, 검색**할 때 (옵션) |
+|:---:|:---|:---|
+| **형태** | `/users`<span class="param-path">/10</span> | `/users`<span class="param-query">?active=true</span> |
+| **용도** | 리소스를 **식별**할 때<br>(ID 등) | **정렬, 필터링, 검색**할 때<br>(옵션) |
 | **의미** | "10번 유저" | "활성 상태인 유저들" |
 
 ---
 
 ## 3. 서버 아키텍처의 진화
 
+--
+
 ### Monolithic vs MSA
 
-* **Monolithic:** 모든 기능이 한 덩어리. 관리는 쉽지만 배포가 무겁고 장애가 전파됨.
-* **MSA:** 기능별로 서버가 분리됨. 장애 격리가 가능하지만 구조가 복잡함.
+<img src="images/mono_vs_msa.jpeg" alt="Monolithic vs MSA">
+
+* **Monolithic:** 관리 단순 / 전체 배포 필요
+* **MSA:** 장애 격리 / 구조 복잡
 
 ---
 
 ## 4. Java 백엔드 구조
 
+--
+
 ### Java Spring Boot 계층 구조
 
 요청이 들어오면 공장이 가동됩니다.
 
-1. **Controller:** 손님 맞이 (요청 검증, 진입점)
-2. **Service:** 요리사 (비즈니스 로직 처리)
-3. **Repository:** 창고지기 (DB 데이터 입출력)
+<img src="images/java_layered_arch.jpeg" alt="Java Layered Architecture">
+
+1. **Controller:** 손님 맞이 (요청 검증)
+2. **Service:** 요리사 (비즈니스 로직)
+3. **Repository:** 창고지기 (DB 접근)
+
+--
 
 ### 데이터 흐름과 DTO
 
-* **DTO (Data Transfer Object):** 계층 간 데이터를 나르기 위한 바구니 객체.
-* **흐름:** Request(JSON) ➡️ Controller(DTO 변환) ➡️ Service(로직) ➡️ Repository(Entity 저장)
+> **DTO (Data Transfer Object):** 데이터를 나르기 위한 바구니
 
-### MSA 서버 간 통신
+1. **Request (JSON):** `{"id": "user1"}`
+2. **Controller:** JSON ➡️ **DTO** 변환
+3. **Service:** DTO ➡️ **Entity** 변환 후 로직 수행
+4. **Repository:** Entity를 DB에 저장
 
-* **Sync (동기):** Feign Client 사용. 직관적이나 장애 전파 위험.
-* **Async (비동기):** Kafka/RabbitMQ 사용. 메시지 큐에 이벤트 발행. 느슨한 결합.
+--
+
+### MSA 서버 간 통신 방식
+
+"주문 서버"가 "상품 서버"에게 데이터를 요청할 때
+
+* **Sync (동기) - Feign Client:**
+    * 메소드 호출하듯 HTTP 요청 (`productClient.get()`)
+    * 직관적이나 장애 전파 위험
+* **Async (비동기) - Kafka/RabbitMQ:**
+    * 메시지 큐에 이벤트 발행
+    * 느슨한 결합, 장애 격리
 
 ---
 
-## 5. MSA 구조와 데이터 처리 전략
+## 5. MSA 구조와 응답 처리
+
+--
 
 ### MSA의 관문, API Gateway
 
-> "앱은 문지기(Gateway)만 알면 된다."
+### 1. Gateway의 핵심 역할 : 라우팅(Routing)
 
-* **Routing:** 주소(`/orders`, `/users`)에 따라 적절한 서버로 연결.
-* **Auth:** 인증/인가 처리 (입구 컷).
-* **Aggregation:** 여러 서버의 데이터를 모아서 한 번에 응답 (비빔밥 패턴).
+> "가장 기본적인 역할: 교통 정리"
 
-### 💾 MSA의 DB 전략
+![API Gateway Roles](images/gateway_roles.jpeg)
 
-* **Database per Service:** 각 마이크로서비스는 **자신만의 DB**를 가집니다. (다른 서비스 DB 직접 조회 불가)
-* **Polyglot:** 서비스 목적에 맞게 RDB, NoSQL, Redis 등을 섞어서 사용.
+* **Client:** `/orders` 요청 ➡️ **Gateway** ➡️ **주문 서버**
+* **역할:** 주소를 보고 적절한 서버를 찾아 연결해 주는 **중계자**.
+* **QC 포인트:** "주문 서버는 살아있는데 Gateway 설정이 꼬여서 404가 뜰 수 있음."
+
+--
+
+### 2. Gateway의 심화 역할 : Aggregation (묶음 배송)
+
+> "모바일 성능을 위해 Gateway가 **조립**까지 수행하는 경우"
+
+* **상황:** 앱 실행 시 [내 정보 + 주문 목록 + 알림]이 다 필요함.
+* **단순 라우팅 시:** 앱이 요청을 **3번** 보내야 함 (느림).
+* **Aggregation 적용 시:**
+    1. 앱은 `GET /dashboard` **1번만 요청**.
+    2. Gateway가 내부적으로 3개 서버를 호출하여 데이터를 합침.
+    3. **한 번에 응답** (네트워크 비용 절감). 
+
+--
+
+### 3. Service Aggregation (오케스트레이션)
+
+> "주문 서버가 직접 데이터를 모으는 경우도 있지 않나요?" ➡️ **맞습니다!**
+
+<img src="images/service_aggregator.jpeg" alt="Service Aggregator" height="250">
+
+* **상황:** 주문 내역(Order) 안에 상품명(Product)과 주소(User)가 꼭 포함되어야 할 때.
+* **동작:**
+    1. Gateway는 **주문 서버**만 호출.
+    2. **주문 서버**가 사령관이 되어 회원/상품 서버에 데이터를 요청(Feign/gRPC).
+    3. 주문 서버가 로직으로 데이터를 가공하여 응답.
+
+--
+
+### 🔍 MQ(메시지 큐)로 데이터를 모을 수 있나요?
+
+> "주문 서버가 MQ를 통해 데이터를 받아와서 응답하면 안 되나요?"
+
+* **가능하지만, 조회(GET)에는 비추천:**
+    * 앱은 **즉시 응답**을 기다리는데, MQ는 **비동기(느림)** 통신임.
+    * 단순히 데이터를 읽어올 때는 **HTTP(Feign)나 gRPC** 같은 동기 통신이 훨씬 빠름.
+* **MQ는 이럴 때 사용:**
+    * "주문 완료" 처리 후, 배송/메일 발송 등 **기다릴 필요 없는 후속 작업**을 던질 때.
+
+--
+
+### 💾 MSA의 DB 전략 (Database per Service)
+
+> "주문 서버가 회원 DB를 직접 조회하면 안 되나요?" ➡️ **안 됩니다.**
+
+<img src="images/database_msa.jpeg" alt="Database per Service">
+
+* **원칙:** 각 마이크로서비스는 **자신만의 DB**를 가진다.
+* **Polyglot:** 서비스 목적에 따라 알맞은 DB 사용 (RDB, NoSQL 등).
+
+--
 
 ### 🚀 성능 최적화 : Caching (주문 내역 예시)
 
-> "자주 조회되지만 잘 안 바뀌는 데이터는 **메모리(Redis)**에 두자."
+> "내 지난 주문 내역은 자주 안 바뀌니까, <span class="cache-fast">메모리(Redis)</span>에 저장해두자."
 
-1. **Cache Miss:** 캐시에 없으면 DB에서 조회(느림) 후 캐시에 저장.
-2. **Cache Hit:** 캐시에 있으면 메모리에서 바로 반환(빠름).
+<img src="images/caching_flow.jpeg" alt="Caching Strategy Flow">
 
-**⚠️ QC 포인트 (Stale Data):**
+1. **첫 요청 (Cache Miss):** DB에서 지난 1년 치 주문 내역을 긁어옴 (느림) ➡️ 캐시에 저장.
+2. **이후 요청 (Cache Hit):** 메모리에서 바로 꺼내줌 (빠름).
 
-* 주문 상태가 변경되었는데 앱에서 안 바뀜 ➡️ **캐시 TTL(유효기간)** 동안은 DB가 갱신되어도 캐시가 옛날 데이터를 줄 수 있음.
+--
 
-### 🕒 배치(Batch) 처리
+### ⚠️ 캐싱으로 인한 QC 이슈 (Stale Data)
 
-> "주문은 오늘 했는데, 왜 정산 데이터는 내일 확인 가능한가요?"
+* **상황:** 주문 상태가 '배송중'으로 바뀌었는데, 앱에서는 여전히 '준비중'으로 보임.
+* **원인 (TTL):** 캐시 유효기간(TTL) 동안은 DB가 바꼈어도 캐시가 옛날 데이터를 줌.
+* **QC 포인트:**
+    * "이거 버그인가요?" ➡️ "혹시 캐시 타임이 있나요?" 라고 개발자에게 확인.
 
-* **실시간(Real-time):** 주문 즉시 처리 (재고 차감 등).
-* **배치(Batch):** 데이터를 모아뒀다가 **지정된 시간(새벽 등)에 일괄 처리**.
-* **이유:** 정산 처럼 무거운 작업을 실시간으로 하면 DB 부하가 심하기 때문.
-* **QC 포인트:** 통계/정산 데이터 불일치 시 **"배치 작업 전/후"**인지 확인 필요.
+--
 
----
+### 🕒 배치(Batch) 처리란?
 
-## 6. HTTP Status Code
+> "주문은 오늘 했는데, 왜 정산/매출 데이터는 내일 확인 가능한가요?"
 
-* **2xx (Success):** 정상 처리.
-* **4xx (Client Error):** **"네가(App) 잘못 보냈어."**
-* `400 Bad Request`: 필수 파라미터 누락, 타입 불일치.
-* `401 Unauthorized`: 로그인 만료 (신분증 없음).
-* `403 Forbidden`: 권한 없음 (접근 불가 구역).
+* **실시간(Real-time):** 주문 즉시 처리 (예: 재고 차감, 결제 승인).
+* **배치(Batch):** 데이터를 모아뒀다가 **지정된 시간(주로 새벽)에 한꺼번에 처리**.
 
+--
 
-* **5xx (Server Error):** **"내가(Server) 터졌어."**
-* `500 Internal Server Error`: 자바 코드 에러.
-* `502 Bad Gateway`: 뒷단 서버 죽음.
-* `504 Gateway Timeout`: 뒷단 서버 응답 지연.
+### 왜 배치를 사용할까? (정산 예시)
 
-
+* **이유:**
+    * 주문 1건마다 복잡한 정산(세금, 수수료, 할인 계산)을 하면 **DB가 터짐** <span class="batch-slow">(Too Heavy)</span>.
+    * 시스템 사용량이 적은 새벽에 몰아서 처리하는 게 효율적.
 
 ---
 
-## 7. 결론
+## 6. 인증과 보안 (JWT)
+
+--
+
+### 🎫 Session vs JWT (Token)
+
+> "MSA에서는 왜 세션 대신 토큰을 쓸까요?"
+
+* **Session (놀이공원 입구 컷):** 매번 매표소(서버) 장부에 내 이름을 확인해야 함. 서버가 늘어나면 장부 공유가 힘듦.
+* **JWT (자유이용권 팔찌):**
+    * 발급받은 <span class="auth-key">팔찌(Token)</span>만 보여주면 어느 놀이기구(서버)든 통과.
+    * 서버는 팔찌가 위조됐는지만 확인하면 됨 (Stateless).
+
+--
+
+### JWT (JSON Web Token) 구조
+
+> "이 토큰 안에 유저 정보가 들어있다고?"
+
+![JWT Structure](images/jwt_structure.jpeg)
+
+1. **Header:** 토큰 타입, 암호화 알고리즘 (`HS256`).
+2. **Payload:** 실제 데이터 (`user_id`, `exp`(만료시간)). **누구나 볼 수 있음!** (비번 넣으면 안 됨).
+3. **Signature:** 위변조 방지용 서명 (서버만 아는 키로 암호화).
+
+--
+
+### 🔄 Access Token & Refresh Token
+
+> "보안 때문에 유효기간을 짧게 하면, 맨날 로그인해야 하잖아요?"
+
+| 종류 | 유효기간 | 용도 | 저장 위치 |
+| :--- | :--- | :--- | :--- |
+| **Access Token** | 짧음 (30분) | 실제 API 요청용 (출입증) | 앱 메모리 |
+| **Refresh Token** | 김 (2주) | 새 Access Token 발급용 (교환권) | 보안 스토리지 |
+
+--
+
+### ⚙️ Silent Refresh (토큰 갱신 흐름)
+
+> "사용자는 로그인이 풀린 줄도 모르게 처리해야 합니다."
+
+![Refresh Token Flow](images/token_flow.jpeg)
+
+1. 앱이 **Access Token**으로 요청 ➡️ **401 Error (만료)**.
+2. 앱이 **Refresh Token**을 보내서 "새 거 주세요" 요청.
+3. 서버가 확인 후 **New Access Token** 발급.
+4. 앱은 새 토큰으로 **재요청** (사용자는 모름).
+
+---
+
+## 7. HTTP Status Code
+
+--
+
+### Status Code 분류
+
+<img src="images/status_code.jpeg" alt="HTTP Status Codes">
+
+--
+
+### 🚨 400 Bad Request
+
+* **의미:** 문법 오류 또는 필수 정보 누락
+* **체크리스트:**
+    * 필수 파라미터(`user_id`) 누락?
+    * 타입 불일치 (숫자에 문자열)?
+    * DTO 유효성 검사(`@NotNull`) 실패?
+
+--
+
+### ⚠️ 500번대 Error
+
+* **500 Internal Server Error:** 서버의 잘못된 구성, DB서버의 연결문제등으로 발생.
+* **502 Bad Gateway:** 뒷단(Java 서버)이 죽어있음.
+* **504 Gateway Timeout:** 뒷단 서버가 너무 느림.
+
+--
+
+### 🔐 401 vs 403
+
+* **401 Unauthorized:** "신분증 없음" (로그인 풀림)
+* **403 Forbidden:** "접근 불가" (관리자 페이지 등)
+
+---
+
+## 8. 결론
+
+--
 
 ### QC의 핵심: "현상" 너머의 "원인" 추론
 
@@ -161,21 +344,27 @@
 * **Before:** "주문 목록이 안 떠요."
 * **After:** "주문 API 호출 시 **504 Timeout**이 발생합니다. 서버 부하가 의심됩니다."
 
-### ✅ 체크리스트 1: 버그 리포트 전 '나'를 의심하기
+--
+
+### ✅ 체크리스트 1: '나'를 의심하기
 
 * **4xx 에러가 떴다면?**
-* 무조건 내 잘못(Client Error)일 확률 90%.
-* **Action:** Swagger(명세서)를 켜고, Charles에서 내가 보낸 `Request Body`의 **필수값/오타/데이터 타입**을 한 글자씩 대조한다.
+    * 내 잘못(Client Error)일 확률 90%.
+    * **Action:** Swagger(명세서)를 켜고, Charles에서 내가 보낸 `Request Body`의 **필수값/오타/데이터 타입**을 한 글자씩 대조한다.
 
-
+--
 
 ### ✅ 체크리스트 2: '시간차' 인정하고 질문하기
 
 * 데이터가 즉시 안 바뀔 때, **설정을 직접 볼 수 없다면 "정책"을 물어본다.**
 * **(캐시):** "프로필 사진 바꿨는데 안 변해요. 혹시 **캐싱 타임**이 잡혀있나요? 얼마 뒤에 갱신되나요?"
+                
+--
 
 ### ✅ 체크리스트 3: 환경(Environment) 필터링
 
 * 앱 문제가 아닌 **네트워크 환경** 문제 걸러내기.
 * **VPN:** 내부망(Dev/Stage) 접속 시 VPN 연결이 끊기진 않았는가?
 * **Proxy:** HTTPS 인증서 문제로 통신이 실패하진 않았는가? (Charles 끄고 재시도 해보기)
+
+--
