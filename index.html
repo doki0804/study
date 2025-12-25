@@ -231,7 +231,7 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
 
 > "주문 서버가 직접 데이터를 모으는 경우도 있지 않나요?" ➡️ **맞습니다!**
 
-![Service Aggregator](images/service_aggregator.jpeg)
+<img src="images/service_aggregator.jpeg" alt="Service Aggregator" height="250">
 
 * **상황:** 주문 내역(Order) 안에 상품명(Product)과 주소(User)가 꼭 포함되어야 할 때.
 * **동작:**
@@ -249,7 +249,8 @@ API 주소에 데이터를 담아 보내는 두 가지 방법
     * 앱은 **즉시 응답**을 기다리는데, MQ는 **비동기(느림)** 통신임.
     * 단순히 데이터를 읽어올 때는 **HTTP(Feign)나 gRPC** 같은 동기 통신이 훨씬 빠름.
 * **MQ는 이럴 때 사용:**
-    * "주문 완료" 처리 후, 배송/메일 발송 등 **기다릴 필요 없는 후속 작업**을 던질 때.                
+    * "주문 완료" 처리 후, 배송/메일 발송 등 **기다릴 필요 없는 후속 작업**을 던질 때.
+
 --
 
 ### 💾 MSA의 DB 전략 (Database per Service)
