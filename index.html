@@ -261,7 +261,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <p>복수의 트랜잭션이 서로 <b>Exclusive Lock(배타락)</b>을 점유한 채 대기하는 상태</p>
                     <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e74c3c&text=Tx1(Hold:RowA,+Wait:RowB)+<->+Tx2(Hold:RowB,+Wait:RowA)" alt="데드락">
                     <div class="box fragment fade-up">
-                        <p style="margin:0; font-size:0.9em;"><span class="highlight">발생 예시:</span> Tx1이 1번 게시글을 잠그고 2번을 수정하려 대기 중인데, Tx2는 2번 게시글을 잠그고 1번을 수정하려 대기할 때 발생합니다.</p>
+                        <p style="margin:0; font-size:0.7em;"><span class="highlight">발생 예시:</span> Tx1이 1번 게시글을 잠그고 2번을 수정하려 대기 중인데, Tx2는 2번 게시글을 잠그고 1번을 수정하려 대기할 때 발생합니다.</p>
                         <p class="small-text" style="color:#e7ad52;">👉 DBMS의 Deadlock Detector가 이를 감지하여 작업량이 적은 트랜잭션을 강제 Rollback(취소) 합니다.</p>
                     </div>
                 </section>
