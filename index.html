@@ -348,14 +348,30 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                 </section>
                 <section>
                     <h4>i. ERD (Entity-Relationship Diagram)</h4>
-                    <div class="box">
-                        <p class="small-text2">업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, <br>식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구</p>
-                        <img class="img-actual fragment fade-up" src="images/images02.png" alt="ERD">
-                        <ul class="small-text2">
-                            <li><b>1:1 (One-to-One):</b> User - UserProfile (수직 분할 시)</li>
-                            <li><b>1:N (One-to-Many):</b> User(1)가 여러 개의 Order(N)를 생성함 (까마귀 발 표기법 참조)</li>
-                            <li><b>N:M (Many-to-Many):</b> Order(N)와 Product(M). 반드시 연결 테이블(Order_Items)을 통해 두 개의 1:N으로 해소해야 함.</li>
-                        </ul>
+                    <div class="box flex-container" style="align-items: center; text-align: left;">
+                        <div class="flex-item" style="flex: 1.2;">
+                            <p class="small-text" style="margin-top: 0; line-height: 1.5;">
+                                업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, 식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구입니다.
+                            </p>
+                            <img class="img-actual" src="ERD.png" alt="RDBMS 심화 ERD 다이어그램" style="margin: 10px 0; max-width: 100%;">
+                        </div>
+                
+                        <div class="flex-item" style="flex: 1;">
+                            <ul class="small-text fragment fade-up" style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li style="margin-bottom: 15px;">
+                                    <span class="highlight" style="display: inline-block; margin-bottom: 5px;">1:1 (One-to-One)</span><br>
+                                    User - UserProfile (수직 분할 시)
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <span class="highlight" style="display: inline-block; margin-bottom: 5px;">1:N (One-to-Many)</span><br>
+                                    User(1)가 여러 개의 Order(N)를 생성함 (까마귀 발 표기법 참조)
+                                </li>
+                                <li>
+                                    <span class="highlight" style="display: inline-block; margin-bottom: 5px;">N:M (Many-to-Many)</span><br>
+                                    Order(N)와 Product(M). 반드시 연결 테이블(Order_Items)을 통해 두 개의 1:N으로 해소해야 함.
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
             </section>
