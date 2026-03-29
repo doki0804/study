@@ -105,7 +105,7 @@
                 </section>
                 <section>
                     <h3>DB의 기본 아키텍처</h3>
-                    <img class="img-actual" src="images01.png" alt="DB 핵심 개념 통합 이미지">
+                    <img class="img-actual" src="images/images01.png" alt="DB 핵심 개념 통합 이미지">
                     <p class="fragment fade-up">사용자의 애플리케이션은 직접 데이터를 조작하지 않고, <br>백엔드 서버(API)를 거쳐 DBMS에 쿼리(Query)를 요청하여 데이터를 다룬다.</p>
                 </section>
             </section>
@@ -350,7 +350,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <h3>i. ERD (Entity-Relationship Diagram)</h3>
                     <div class="box">
                         <p class="small-text">업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, <br>식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구</p>
-                        <img class="img-actual fragment fade-up" src="images02.png" alt="ERD">
+                        <img class="img-actual fragment fade-up" src="images/images02.png" alt="ERD">
                         <ul class="small-text">
                             <li><b>1:1 (One-to-One):</b> User - UserProfile (수직 분할 시)</li>
                             <li><b>1:N (One-to-Many):</b> User(1)가 여러 개의 Order(N)를 생성함 (까마귀 발 표기법 참조)</li>
@@ -418,7 +418,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                 </section>
                 <section>
                     <h3>벡터 DB (Vector DB)</h3>
-                    <img class="img-actual fragment fade-up" src="image04.png" alt="벡터DB">
+                    <img class="img-actual fragment fade-up" src="images/image04.png" alt="벡터DB">
                     <div class="box fragment fade-up">
                         <p>LLM 및 RAG(검색 증강 생성) 아키텍처의 뼈대입니다.</p>
                         <p class="small-text">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행</p>
