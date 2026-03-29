@@ -5,17 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>데이터베이스(DB) 기초와 이해</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/dracula.min.css" id="theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css" id="theme">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai.min.css">
+    
     <style>
-        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { text-transform: none; font-family: 'Pretendard', sans-serif; }
-        .reveal p, .reveal li { font-size: 0.8em; line-height: 1.5; }
-        .highlight { color: #ff79c6; font-weight: bold; }
-        .img-placeholder { border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); max-height: 350px; margin: 10px auto; display: block; }
-        .reveal table { font-size: 0.55em; width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .reveal th { background-color: #444; color: #fff; padding: 10px; border: 1px solid #666; }
-        .reveal td { padding: 10px; border: 1px solid #666; text-align: center; }
-        .small-text { font-size: 0.6em; color: #bbb; }
-        .flex-container { display: flex; gap: 15px; align-items: flex-start; justify-content: center; }
+        /* 기본 폰트 설정 */
+        body, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 { 
+            font-family: 'Pretendard', sans-serif; 
+            letter-spacing: -0.02em;
+        }
+        .reveal h1 { font-weight: 800; text-shadow: 2px 4px 10px rgba(0,0,0,0.5); }
+        .reveal h2 { color: #e7ad52; font-weight: 700; }
+        .reveal h3 { color: #42b983; font-weight: 600; }
+        
+        /* 텍스트 크기 및 줄간격 */
+        .reveal p, .reveal li { font-size: 0.85em; line-height: 1.6; }
+        .small-text { font-size: 0.65em; color: #a9b7c6; margin-top: 10px; }
+        
+        /* 강조 텍스트 (형광펜 효과) */
+        .highlight { 
+            color: #ffeeb2; 
+            font-weight: 800; 
+            background: rgba(255, 204, 0, 0.2); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+        }
+
+        /* 카드형 박스 레이아웃 (정보 분리) */
+        .box { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        /* 플렉스 컨테이너 */
+        .flex-container { display: flex; gap: 20px; align-items: stretch; justify-content: center; width: 100%; }
+        .flex-item { flex: 1; display: flex; flex-direction: column; }
+
+        /* 세련된 테이블 디자인 */
+        .reveal table { 
+            font-size: 0.6em; 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+            margin: 0 auto 20px auto; 
+        }
+        .reveal th { 
+            background-color: #2c3e50; 
+            color: #fff; 
+            padding: 12px 15px; 
+            font-weight: bold; 
+            border-bottom: 3px solid #42b983; 
+            text-align: center;
+        }
+        .reveal td { 
+            padding: 12px 15px; 
+            background-color: rgba(255, 255, 255, 0.03); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            text-align: center; 
+        }
+        .reveal tr:last-child td { border-bottom: none; }
+        .reveal td.point { font-weight: bold; color: #e7ad52; } /* 테이블 내 포인트 컬러 */
+
+        /* 이미지 플레이스홀더 */
+        .img-placeholder { 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6); 
+            max-height: 350px; 
+            margin: 15px auto; 
+            display: block; 
+            border: 1px solid #444;
+        }
+
+        /* 코드 블록 디자인 */
+        .reveal pre { width: 100%; margin: 10px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border-radius: 8px; }
+        .reveal pre code { padding: 15px; font-size: 1.1em; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -23,30 +94,36 @@
         <div class="slides">
             
             <section>
-                <h1>데이터베이스(DB)에 대하여</h1>
+                <h1>데이터베이스(DB)<br>마스터하기</h1>
+                <p style="color: #42b983; font-size: 1.2em; font-weight: bold; margin-top: 20px;">RDBMS의 A to Z & 최신 DB 트렌드</p>
+                <p style="margin-top: 40px;"><small>만든이: [이름/소속을 입력하세요]</small></p>
             </section>
 
             <section>
                 <section>
                     <h2>1. DB란 무엇인가?</h2>
-                    <p>데이터베이스(Database)는 여러 사람이 공유하여 사용할 목적으로 <span class="highlight">통합하여 관리되는 데이터의 집합</span>입니다.</p>
+                    <div class="box">
+                        <p>데이터베이스(Database)는 여러 사람이 공유하여 사용할 목적으로 <br><span class="highlight">통합하여 관리되는 데이터의 집합</span>입니다.</p>
+                    </div>
                     <ul>
-                        <li><b>중복성 최소화:</b> 엑셀 파일처럼 여기저기 흩어져 있는 것을 방지</li>
-                        <li><b>무결성 유지:</b> 데이터의 정확성과 일관성 보장</li>
-                        <li><b>DBMS:</b> 이런 DB를 관리하는 소프트웨어 (MySQL, Oracle 등)</li>
+                        <li class="fragment fade-up"><b>중복성 최소화:</b> 엑셀 파일처럼 여기저기 흩어져 있는 것을 방지</li>
+                        <li class="fragment fade-up"><b>무결성 유지:</b> 데이터의 정확성과 일관성 보장</li>
+                        <li class="fragment fade-up"><b>DBMS:</b> 이런 DB를 관리하는 소프트웨어 (MySQL, Oracle 등)</li>
                     </ul>
                 </section>
                 <section>
                     <h3>DB의 기본 아키텍처</h3>
-                    <img class="img-placeholder" src="https://dummyimage.com/800x400/333/fff&text=Client+-+Web+Server+-+DB+Server" alt="DB 아키텍처">
-                    <p>우리가 쓰는 앱은 직접 데이터를 조작하지 않고, 서버를 통해 DBMS에 데이터를 요청하여 가져옵니다.</p>
+                    <img class="img-placeholder" src="https://dummyimage.com/800x400/222/42b983&text=Client+---+(Request)--->+Server+--->+DB" alt="DB 아키텍처">
+                    <p class="fragment fade-up">우리가 쓰는 앱은 직접 데이터를 조작하지 않고, <br>서버를 통해 DBMS에 데이터를 요청하여 가져옵니다.</p>
                 </section>
             </section>
 
             <section>
                 <section>
                     <h2>2. RDBMS (관계형 DB)</h2>
-                    <p>데이터를 <span class="highlight">행(Row)과 열(Column)로 이루어진 테이블(표) 형태</span>로 저장하고, 테이블 간의 관계를 연결하는 가장 강력하고 표준적인 DB입니다.</p>
+                    <div class="box">
+                        <p>데이터를 <span class="highlight">행(Row)과 열(Column)로 이루어진 테이블(표) 형태</span>로 저장하고, <br>테이블 간의 관계를 연결하는 가장 강력하고 표준적인 DB입니다.</p>
+                    </div>
                 </section>
                 
                 <section>
@@ -60,21 +137,21 @@
                             <th>등급 (Column)</th>
                         </tr>
                         <tr>
-                            <td>1</td>
+                            <td class="point">1</td>
                             <td>홍길동 (Row)</td>
                             <td>25</td>
                             <td>VIP</td>
                         </tr>
                         <tr>
-                            <td>2</td>
+                            <td class="point">2</td>
                             <td>김철수 (Row)</td>
                             <td>30</td>
                             <td>Gold</td>
                         </tr>
                     </table>
-                    <ul class="small-text">
-                        <li><b>Column (열):</b> 데이터의 속성 (이름, 나이 등)</li>
-                        <li><b>Row (행):</b> 실제 데이터 한 건 (레코드)</li>
+                    <ul>
+                        <li class="fragment fade-up"><b>Column (열):</b> 데이터의 속성 (이름, 나이 등)</li>
+                        <li class="fragment fade-up"><b>Row (행):</b> 실제 데이터 한 건 (레코드)</li>
                     </ul>
                 </section>
 
@@ -82,35 +159,34 @@
                     <h3>b. 기본키(PK)와 외래키(FK)</h3>
                     <p>테이블 간의 <b>관계(Relationship)</b>를 맺어주는 핵심 장치입니다.</p>
                     <div class="flex-container">
-                        <div style="flex:1;">
-                            <p class="small-text">[고객 테이블]</p>
+                        <div class="flex-item box">
+                            <p class="small-text" style="margin-top:0;">[고객 테이블]</p>
                             <table>
                                 <tr><th>고객ID (PK)</th><th>이름</th></tr>
-                                <tr><td class="highlight">1</td><td>홍길동</td></tr>
+                                <tr><td class="point">1</td><td>홍길동</td></tr>
                                 <tr><td>2</td><td>김철수</td></tr>
                             </table>
                         </div>
-                        <div style="flex:1;">
-                            <p class="small-text">[주문 테이블]</p>
+                        <div class="flex-item box">
+                            <p class="small-text" style="margin-top:0;">[주문 테이블]</p>
                             <table>
                                 <tr><th>주문번호 (PK)</th><th>주문자ID (FK)</th><th>상품명</th></tr>
-                                <tr><td>101</td><td class="highlight">1</td><td>노트북</td></tr>
-                                <tr><td>102</td><td class="highlight">1</td><td>마우스</td></tr>
+                                <tr><td>101</td><td class="point">1</td><td>노트북</td></tr>
+                                <tr><td>102</td><td class="point">1</td><td>마우스</td></tr>
                             </table>
                         </div>
                     </div>
                     <ul class="small-text">
-                        <li><b>Primary Key (기본키):</b> 각 행을 고유하게 식별 (주민번호 같은 역할)</li>
-                        <li><b>Foreign Key (외래키):</b> 다른 테이블의 PK를 참조. 부모 테이블에 없는 값은 넣을 수 없음 (참조 무결성 보장).</li>
+                        <li class="fragment fade-up"><span class="highlight">Primary Key (기본키):</span> 각 행을 고유하게 식별 (주민번호 같은 역할)</li>
+                        <li class="fragment fade-up"><span class="highlight">Foreign Key (외래키):</span> 다른 테이블의 PK를 참조. 참조 무결성 보장.</li>
                     </ul>
                 </section>
 
                 <section>
                     <h3>c. SQL 기초 (DDL, DML, DCL)</h3>
-                    <p>RDBMS와 대화하기 위한 언어입니다.</p>
                     <div class="flex-container">
-                        <div style="flex:1;">
-                            <p class="small-text">1. 테이블 생성 (DDL)</p>
+                        <div class="flex-item box">
+                            <p style="margin-top:0; font-weight:bold;">1. 테이블 생성 (DDL)</p>
                             <pre><code class="language-sql" data-trim>
 CREATE TABLE 고객 (
   고객ID INT PRIMARY KEY,
@@ -118,10 +194,11 @@ CREATE TABLE 고객 (
 );
                             </code></pre>
                         </div>
-                        <div style="flex:1;">
-                            <p class="small-text">2. 데이터 삽입/조회 (DML)</p>
+                        <div class="flex-item box">
+                            <p style="margin-top:0; font-weight:bold;">2. 데이터 조작 (DML)</p>
                             <pre><code class="language-sql" data-trim>
 INSERT INTO 고객 VALUES (1, '홍길동');
+
 SELECT * FROM 고객;
                             </code></pre>
                         </div>
@@ -131,94 +208,110 @@ SELECT * FROM 고객;
                 <section>
                     <h3>d. JOIN (테이블 합치기)</h3>
                     <p>나눠진 테이블들을 <b>관계(PK-FK)</b>를 기준으로 합쳐서 조회합니다.</p>
-                    <pre><code class="language-sql" data-trim>
+                    <div class="box">
+                        <pre style="margin:0;"><code class="language-sql" data-trim>
 SELECT 고객.이름, 주문.상품명 
 FROM 고객 
 INNER JOIN 주문 ON 고객.고객ID = 주문.주문자ID;
-                    </code></pre>
-                    <p class="small-text">결과: 홍길동-노트북, 홍길동-마우스</p>
-                    <ul class="small-text">
-                        <li><b>INNER JOIN:</b> 양쪽 테이블에 모두 조건이 맞는 데이터만 조회 (교집합)</li>
-                        <li><b>LEFT JOIN:</b> 왼쪽 테이블 기준, 오른쪽은 매칭되는 것만 붙여줌 (없으면 NULL)</li>
+                        </code></pre>
+                        <p class="small-text" style="text-align:right; margin-bottom:0;">결과: 홍길동-노트북, 홍길동-마우스</p>
+                    </div>
+                    <ul>
+                        <li class="fragment fade-up"><b>INNER JOIN:</b> 양쪽 테이블에 모두 조건이 맞는 데이터만 조회</li>
+                        <li class="fragment fade-up"><b>LEFT JOIN:</b> 왼쪽 테이블 기준, 오른쪽은 매칭되는 것만 붙임</li>
                     </ul>
                 </section>
 
                 <section>
                     <h3>e. 트랜잭션과 ACID</h3>
                     <p>데이터 무결성을 지키는 논리적 작업 단위입니다. (예: 계좌 이체)</p>
-                    <ul class="small-text">
-                        <li><b>A (Atomicity, 원자성):</b> 모두 성공하거나 아예 실패해야 함 (All or Nothing).</li>
-                        <li><b>C (Consistency, 일관성):</b> 작업 전후로 규칙(잔고 마이너스 불가 등)이 유지되어야 함.</li>
-                        <li><b>I (Isolation, 고립성):</b> 동시에 실행되는 트랜잭션은 서로 영향을 주지 않음.</li>
-                        <li><b>D (Durability, 지속성):</b> 성공한 결과는 컴퓨터가 꺼져도 영구 보존됨.</li>
-                    </ul>
+                    <div class="box">
+                        <ul>
+                            <li class="fragment fade-up"><span class="highlight">A (원자성):</span> 모두 성공하거나 아예 실패해야 함 (All or Nothing)</li>
+                            <li class="fragment fade-up"><span class="highlight">C (일관성):</span> 작업 전후로 규칙(잔고 마이너스 불가 등)이 유지됨</li>
+                            <li class="fragment fade-up"><span class="highlight">I (고립성):</span> 동시에 실행되는 트랜잭션은 서로 영향을 주지 않음</li>
+                            <li class="fragment fade-up"><span class="highlight">D (지속성):</span> 성공한 결과는 컴퓨터가 꺼져도 영구 보존됨</li>
+                        </ul>
+                    </div>
                 </section>
 
                 <section>
                     <h3>f. Index (인덱스)</h3>
-                    <p>데이터 검색 속도를 엄청나게 높여주는 <span class="highlight">책의 목차(찾아보기)</span>입니다.</p>
-                    <ul>
-                        <li><b>장점:</b> 책을 처음부터 끝까지 다 읽는 것(Full Table Scan)을 막고, <b>SELECT 속도를 비약적으로 향상</b>시킵니다.</li>
-                        <li><b>단점:</b> 데이터가 추가/수정/삭제 될 때마다 목차도 갱신해야 하므로 <b>쓰기 속도가 느려지고 추가 용량을 차지</b>합니다.</li>
-                    </ul>
+                    <p>데이터 검색 속도를 엄청나게 높여주는 <span class="highlight">책의 목차</span>입니다.</p>
+                    <div class="flex-container">
+                        <div class="flex-item box fragment fade-up">
+                            <h4 style="color:#42b983;">👍 장점</h4>
+                            <p class="small-text">책을 처음부터 끝까지 다 읽는 것(Full Scan)을 막고, <b>조회(SELECT) 속도를 비약적으로 향상</b>시킵니다.</p>
+                        </div>
+                        <div class="flex-item box fragment fade-up">
+                            <h4 style="color:#e74c3c;">👎 단점</h4>
+                            <p class="small-text">데이터가 추가/수정/삭제 될 때마다 목차도 갱신해야 하므로 <b>쓰기 속도가 느려지고 추가 용량을 차지</b>합니다.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section>
                     <h3>g. 데드락 (Deadlock)</h3>
                     <p>트랜잭션들은 데이터를 수정할 때 <b>Lock(잠금)</b>을 겁니다.</p>
-                    <img class="img-placeholder" src="https://dummyimage.com/500x150/333/fff&text=Tx1(Locks+A,+Waits+B)+<->+Tx2(Locks+B,+Waits+A)" alt="데드락">
-                    <ul class="small-text">
-                        <li><span class="highlight">교착 상태:</span> 두 트랜잭션이 서로 상대방이 잡고 있는 Lock이 풀리기만을 무한정 기다리는 상태입니다. (좁은 골목길 마주 본 자동차)</li>
-                        <li><b>해결:</b> DBMS는 데드락을 감지하면, 하나를 강제로 취소(Rollback)시켜 길을 터줍니다.</li>
-                    </ul>
+                    <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e74c3c&text=Deadlock:+Tx1(Waits+B)+<->+Tx2(Waits+A)" alt="데드락">
+                    <div class="box fragment fade-up">
+                        <p style="margin:0;"><span class="highlight">교착 상태:</span> 두 트랜잭션이 서로 상대방이 잡고 있는 Lock이 풀리기만을 무한정 기다리는 상태 (좁은 골목길 마주 본 자동차)</p>
+                        <p class="small-text">👉 DBMS는 데드락을 감지하면 하나를 강제로 취소(Rollback)시켜 해결합니다.</p>
+                    </div>
                 </section>
 
                 <section>
-                    <h3>h. 정규화 (Normalization)</h3>
-                    <p>데이터의 중복을 막고 이상현상(Anomaly)을 방지하기 위해 테이블을 <span class="highlight">의미에 맞게 쪼개는 설계 과정</span>입니다.</p>
-                    <ul class="small-text">
-                        <li><b>제1정규형:</b> 모든 컬럼의 값은 원자값(단일값)을 가져야 함</li>
-                        <li><b>제2정규형:</b> 기본키의 일부에만 종속되는 컬럼 분리 (부분 함수 종속 제거)</li>
-                        <li><b>제3정규형:</b> 일반 컬럼끼리 종속되는 것 분리 (이행적 함수 종속 제거)</li>
-                    </ul>
-                    <p class="small-text">*주의: 무조건 쪼개면 JOIN이 많아져 성능이 저하되므로, 필요시 '반정규화'를 하기도 합니다.</p>
-                </section>
-
-                <section>
-                    <h3>i. ERD (Entity-Relationship Diagram)</h3>
-                    <p>데이터베이스의 뼈대(설계도)를 시각적으로 표현한 다이어그램입니다.</p>
-                    <img class="img-placeholder" src="https://dummyimage.com/600x200/333/fff&text=Customer(1)+-----+Line+----+(N)Orders" alt="ERD 다이어그램">
-                    <ul class="small-text">
-                        <li><b>1:1 관계:</b> 사람 - 주민등록증</li>
-                        <li><b>1:N 관계:</b> 부서(1) - 직원(N) (가장 흔한 구조)</li>
-                        <li><b>N:M 관계:</b> 학생(N) - 수강과목(M) (보통 중간에 매핑 테이블을 둬서 1:N 2개로 풉니다)</li>
-                    </ul>
+                    <h3>h. 정규화와 ERD</h3>
+                    <div class="box">
+                        <h4 style="font-size: 1.1em;">정규화 (Normalization)</h4>
+                        <p class="small-text">데이터의 중복을 막고 이상현상(Anomaly)을 방지하기 위해 테이블을 의미에 맞게 쪼개는 설계 과정</p>
+                    </div>
+                    <div class="box fragment fade-up">
+                        <h4 style="font-size: 1.1em;">ERD (Entity-Relationship Diagram)</h4>
+                        <p class="small-text">데이터베이스의 뼈대(설계도)를 시각적으로 표현한 다이어그램</p>
+                        <ul class="small-text" style="margin-top:10px;">
+                            <li><b>1:1 관계:</b> 사람 - 주민등록증</li>
+                            <li><b>1:N 관계:</b> 부서 - 직원 (가장 흔한 구조)</li>
+                            <li><b>N:M 관계:</b> 학생 - 수강과목</li>
+                        </ul>
+                    </div>
                 </section>
             </section>
 
             <section>
                 <section>
                     <h2>3. NoSQL (비관계형 DB)</h2>
-                    <p>RDBMS의 한계(유연성 부족, 확장 비용)를 극복하기 위해 등장한 DB입니다.</p>
+                    <p>RDBMS의 한계(유연성 부족, 확장 비용)를 극복하기 위해 등장했습니다.</p>
                 </section>
                 <section>
                     <h3>a. 문서형 (Document)</h3>
-                    <p>데이터를 JSON 형태로 저장합니다. 스키마가 자유롭습니다.</p>
-                    <pre><code class="language-json" data-trim>
+                    <div class="box">
+                        <p>데이터를 JSON 형태로 저장합니다. 스키마가 자유롭습니다.</p>
+                        <pre style="margin-bottom:0;"><code class="language-json" data-trim>
 {
   "이름": "홍길동",
   "취미": ["독서", "게임"]
 }
-                    </code></pre>
-                    <ul><li>대표 DB: <b>MongoDB</b></li></ul>
+                        </code></pre>
+                    </div>
+                    <p class="fragment fade-up">대표 DB: <b>MongoDB</b></p>
                 </section>
                 <section>
-                    <h3>b. Key-Value & 와이드 컬럼 & 그래프</h3>
-                    <ul class="small-text">
-                        <li><b>Key-Value:</b> '학번:1234' -> '홍길동' 처럼 단순한 키-값 구조. 속도 최상. (<b>Redis</b>)</li>
-                        <li><b>와이드 컬럼:</b> 행마다 컬럼 개수와 종류가 달라도 됨. 대량 데이터 분산 처리에 특화. (<b>Cassandra</b>)</li>
-                        <li><b>그래프:</b> 데이터 자체보다 '관계' 탐색 시 유리 (예: SNS 친구 추천). (<b>Neo4j</b>)</li>
-                    </ul>
+                    <h3>b. 다양한 NoSQL</h3>
+                    <div class="flex-container" style="flex-wrap: wrap;">
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Key-Value</h4>
+                            <p class="small-text">단순한 키-값 구조. 속도 최상.<br>대표: <b>Redis</b></p>
+                        </div>
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Wide-Column</h4>
+                            <p class="small-text">행마다 컬럼이 달라도 됨. 대용량 특화.<br>대표: <b>Cassandra</b></p>
+                        </div>
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Graph</h4>
+                            <p class="small-text">데이터 자체보다 '관계' 탐색에 유리.<br>대표: <b>Neo4j</b></p>
+                        </div>
+                    </div>
                 </section>
             </section>
 
@@ -227,44 +320,47 @@ INNER JOIN 주문 ON 고객.고객ID = 주문.주문자ID;
                     <h2>4. 특수 목적 DB</h2>
                 </section>
                 <section>
-                    <h3>a. 시계열 DB & 인메모리 DB</h3>
-                    <ul>
-                        <li><b>시계열 DB:</b> 온도 센서, 주식 차트 등 '시간'에 따라 끊임없이 쏟아지는 데이터를 다룰 때 씁니다. (예: InfluxDB)</li>
-                        <li><b>인메모리 DB:</b> 디스크가 아닌 RAM에 저장해 압도적으로 빠릅니다. (예: Redis) 주로 실시간 캐싱(Caching)에 사용됩니다.</li>
-                    </ul>
+                    <h3>시계열 DB & 인메모리 DB</h3>
+                    <div class="box fragment fade-up">
+                        <h4>🕒 시계열 DB (Time-Series)</h4>
+                        <p class="small-text">온도 센서, 주식 차트 등 '시간'에 따라 쏟아지는 데이터를 다룰 때 사용 (예: InfluxDB)</p>
+                    </div>
+                    <div class="box fragment fade-up">
+                        <h4>⚡ 인메모리 DB (In-Memory)</h4>
+                        <p class="small-text">디스크가 아닌 RAM에 저장해 압도적으로 빠름. 주로 실시간 캐싱에 사용 (예: Redis)</p>
+                    </div>
                 </section>
                 <section>
-                    <h3>b. 벡터 DB (Vector DB)</h3>
-                    <img class="img-placeholder" src="https://dummyimage.com/600x200/333/fff&text=Text+->+[0.1,+0.5,+-0.2]+->+Similarity+Search" alt="벡터 DB">
-                    <p>LLM(대형 언어 모델) 등 AI 시대의 핵심입니다. 비정형 데이터(텍스트, 이미지)를 숫자 배열(벡터)로 저장하고, 유사도를 순식간에 계산해 검색합니다.</p>
+                    <h3>벡터 DB (Vector DB)</h3>
+                    <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e7ad52&text=Text+->+[0.1,+0.5,+-0.2]+->+Search" alt="벡터 DB">
+                    <div class="box fragment fade-up">
+                        <p>LLM(대형 언어 모델) 등 <span class="highlight">AI 시대의 핵심</span>입니다.</p>
+                        <p class="small-text">비정형 데이터(텍스트, 이미지)를 숫자 배열(벡터)로 저장하고, 유사도를 순식간에 계산해 검색합니다.</p>
+                    </div>
                 </section>
             </section>
 
             <section>
-                <section>
-                    <h2>5. 클라우드 DB란?</h2>
-                    <p>AWS, GCP, Azure에서 제공하는 "빌려 쓰는 데이터베이스(DBaaS)" 입니다.</p>
-                    <img class="img-placeholder" src="https://dummyimage.com/600x200/333/fff&text=Cloud+DB+(RDS,+Aurora,+Spanner)" alt="클라우드 DB">
-                </section>
-                <section>
-                    <h3>클라우드 DB의 장점</h3>
-                    <ul>
-                        <li><b>관리 자동화:</b> 서버 설치, 백업, 보안 패치, 고장 시 복구를 알아서 해줍니다.</li>
-                        <li><b>탄력적 확장성:</b> 트래픽이 폭주하면 클릭 몇 번으로 DB 성능을 즉시 늘릴 수 있습니다.</li>
+                <h2>5. 클라우드 DB란?</h2>
+                <p>AWS, GCP 등에서 제공하는 <b>"빌려 쓰는 데이터베이스"</b></p>
+                <div class="box fragment fade-up">
+                    <ul style="margin:0;">
+                        <li><span class="highlight">관리 자동화:</span> 서버 설치, 백업, 보안 패치 알아서 해결</li>
+                        <li><span class="highlight">탄력적 확장성:</span> 트래픽 폭주 시 버튼 몇 번으로 성능 UP</li>
                         <li><b>대표 서비스:</b> Amazon RDS, Google Cloud SQL</li>
                     </ul>
-                </section>
+                </div>
             </section>
 
             <section>
                 <h2>결론</h2>
-                <p>세상에 모든 걸 완벽하게 처리하는 '만능 DB'는 없습니다.</p>
-                <div style="text-align: left; display: inline-block; margin-top: 20px;">
+                <p>세상에 모든 걸 완벽하게 처리하는 <br>'만능 DB'는 없습니다.</p>
+                <div class="box fragment fade-up" style="text-align: left; display: inline-block; margin-top: 10px;">
                     <p>✔️ 무결성과 복잡한 관계가 중요하면 <span class="highlight">RDBMS</span></p>
                     <p>✔️ 유연한 스키마와 대용량 확장이 필요하면 <span class="highlight">NoSQL</span></p>
                     <p>✔️ AI 검색이나 실시간 반응이 필요하면 <span class="highlight">특화 DB</span></p>
                 </div>
-                <p style="margin-top:30px;">목적에 맞게 여러 DB를 조합해서 쓰는 것이 핵심입니다!</p>
+                <p class="fragment fade-up" style="margin-top:20px; color:#42b983; font-weight:bold;">목적에 맞게 여러 DB를 조합해서 쓰는 것이 핵심입니다!</p>
             </section>
 
         </div>
@@ -275,8 +371,8 @@ INNER JOIN 주문 ON 고객.고객ID = 주문.주문자ID;
     <script>
         Reveal.initialize({
             hash: true,
-            transition: 'slide',
-            slideNumber: true,
+            transition: 'convex', // 화면 전환 효과 변경 (슬라이드 넘길 때 더 역동적임)
+            slideNumber: 'c/t',   // 현재 슬라이드/전체 슬라이드 번호 표시
             plugins: [ RevealHighlight ]
         });
     </script>
