@@ -87,7 +87,9 @@
         <div class="slides">
             
             <section>
-                <h1>데이터베이스(DB)<br>기초</h1>
+                <h1>데이터베이스(DB)<br>마스터하기</h1>
+                <p style="color: #42b983; font-size: 1.2em; font-weight: bold; margin-top: 20px;">RDBMS의 A to Z & 최신 DB 트렌드</p>
+                <p style="margin-top: 40px;"><small>만든이: [이름/소속을 입력하세요]</small></p>
             </section>
 
             <section>
@@ -325,4 +327,139 @@ COMMIT; -- 문제 발생 시 ROLLBACK;
                     <div class="box fragment fade-up" style="padding: 10px 20px;">
                         <p style="color:#e74c3c; margin-top:0; font-size:0.8em;">❌ X->Y->Z 구조. 사원번호 -> 부서코드 -> 부서명, 위치 (부서 정보가 일반 속성에 종속됨)</p>
                         <table style="margin-bottom: 10px;">
-                            <tr><th class="key-col">emp_id (PK)</th><th>name</th><th>dept_code</th><th style="color:#e74
+                            <tr><th class="key-col">emp_id (PK)</th><th>name</th><th>dept_code</th><th style="color:#e74c3c">dept_name</th><th style="color:#e74c3c">location</th></tr>
+                            <tr><td>E105</td><td>Bob</td><td>D02</td><td style="color:#e74c3c">Engineering</td><td style="color:#e74c3c">Pangyo</td></tr>
+                        </table>
+                    </div>
+                    <div class="box fragment fade-up" style="padding: 10px 20px;">
+                        <p style="color:#42b983; margin-top:0; font-size:0.8em;">✅ 3NF 적용: 부서 테이블 분리</p>
+                        <div class="flex-container">
+                            <table style="margin-bottom: 0;">
+                                <tr><th class="key-col">emp_id (PK)</th><th>name</th><th>dept_code (FK)</th></tr>
+                                <tr><td>E105</td><td>Bob</td><td>D02</td></tr>
+                            </table>
+                            <table style="margin-bottom: 0;">
+                                <tr><th class="key-col">dept_code (PK)</th><th>dept_name</th><th>location</th></tr>
+                                <tr><td>D02</td><td>Engineering</td><td>Pangyo</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3>i. ERD (Entity-Relationship Diagram)</h3>
+                    <div class="box">
+                        <p class="small-text">업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, <br>식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구입니다.</p>
+                        <img class="img-placeholder" src="https://dummyimage.com/600x150/222/e7ad52&text=[Users]++||---o<++[Orders]++>o---||++[Products]" alt="ERD 다이어그램" style="margin: 10px auto;">
+                        <ul class="small-text">
+                            <li><b>1:1 (One-to-One):</b> User - UserProfile (수직 분할 시)</li>
+                            <li><b>1:N (One-to-Many):</b> User(1)가 여러 개의 Order(N)를 생성함 (까마귀 발 표기법 참조)</li>
+                            <li><b>N:M (Many-to-Many):</b> Order(N)와 Product(M). 반드시 연결 테이블(Order_Items)을 통해 두 개의 1:N으로 해소해야 함.</li>
+                        </ul>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>3. NoSQL (비관계형 DB)</h2>
+                    <p>RDBMS의 스키마 제약과 수평적 확장(Scale-out)의 한계를 극복하기 위해 등장했습니다.</p>
+                </section>
+                <section>
+                    <h3>a. 문서형 (Document)</h3>
+                    <div class="box">
+                        <p>데이터를 유연한 JSON/BSON 형태로 저장합니다.</p>
+                        <pre style="margin-bottom:0;"><code class="language-json" data-trim>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "username": "alice_99",
+  "history": [
+    {"action": "login", "ip": "192.168.1.10"},
+    {"action": "click", "item_id": "P100"}
+  ]
+}
+                        </code></pre>
+                    </div>
+                    <p class="fragment fade-up">대표 DB: <b>MongoDB, Couchbase</b></p>
+                </section>
+                <section>
+                    <h3>b. 다양한 NoSQL</h3>
+                    <div class="flex-container" style="flex-wrap: wrap;">
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Key-Value</h4>
+                            <p class="small-text">O(1) 해시 룩업으로 응답 지연시간이 마이크로초 단위.<br>대표: <b>Redis, DynamoDB</b></p>
+                        </div>
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Wide-Column</h4>
+                            <p class="small-text">LSM Tree 구조로 대규모 쓰기 부하와 분산 클러스터링에 최적화.<br>대표: <b>Cassandra, HBase</b></p>
+                        </div>
+                        <div class="flex-item box fragment fade-up" style="min-width: 45%;">
+                            <h4 style="color:#42b983;">Graph</h4>
+                            <p class="small-text">Node, Edge, Property로 구성되어 다중 조인(Multi-hop) 탐색에 압도적 성능.<br>대표: <b>Neo4j</b></p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>4. 특수 목적 DB</h2>
+                </section>
+                <section>
+                    <h3>시계열 DB & 인메모리 DB</h3>
+                    <div class="box fragment fade-up">
+                        <h4>🕒 시계열 DB (Time-Series)</h4>
+                        <p class="small-text">타임스탬프를 PK로 삼아 센서, 로그 등 Append-only 데이터를 초당 수백만 건씩 처리하고 압축 저장합니다. (예: InfluxDB, Prometheus)</p>
+                    </div>
+                    <div class="box fragment fade-up">
+                        <h4>⚡ 인메모리 DB (In-Memory)</h4>
+                        <p class="small-text">디스크 I/O를 배제하고 메모리에 데이터를 올려 Session 관리, 실시간 리더보드, 글로벌 캐싱 아키텍처를 구성합니다. (예: Redis, Memcached)</p>
+                    </div>
+                </section>
+                <section>
+                    <h3>벡터 DB (Vector DB)</h3>
+                    <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e7ad52&text=Embedding+->+[0.1,+0.5,+-0.2]+->+Cosine+Similarity" alt="벡터 DB">
+                    <div class="box fragment fade-up">
+                        <p>LLM 및 RAG(검색 증강 생성) 아키텍처의 뼈대입니다.</p>
+                        <p class="small-text">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행합니다.</p>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <h2>5. 클라우드 DB (DBaaS)</h2>
+                <p>퍼블릭 클라우드 제공자가 인프라 프로비저닝과 운영을 대행합니다.</p>
+                <div class="box fragment fade-up">
+                    <ul style="margin:0;">
+                        <li><span class="highlight">고가용성 (HA):</span> 다중 AZ(Availability Zone) 복제 및 자동 Failover 지원</li>
+                        <li><span class="highlight">컴퓨팅/스토리지 분리:</span> 스토리지 계층을 분리하여 읽기 전용 복제본(Read Replica)을 수 분 내에 스케일 아웃 (예: AWS Aurora)</li>
+                        <li><b>서버리스 DB:</b> 트래픽에 따라 CPU/Memory가 자동 확장(Auto-scaling)되며 미사용 시 과금되지 않음</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>결론</h2>
+                <p>현대의 백엔드는 <br><b>'Polyglot Persistence(다중 저장소 패러다임)'</b>를 지향합니다.</p>
+                <div class="box fragment fade-up" style="text-align: left; display: inline-block; margin-top: 10px;">
+                    <p>✔️ 결제 트랜잭션과 복잡한 비즈니스 로직은 <span class="highlight">RDBMS</span></p>
+                    <p>✔️ 대규모 카탈로그나 장바구니 세션은 <span class="highlight">NoSQL</span></p>
+                    <p>✔️ 추천 시스템이나 유사도 검색은 <span class="highlight">특화 DB</span></p>
+                </div>
+                <p class="fragment fade-up" style="margin-top:20px; color:#42b983; font-weight:bold;">데이터의 생명주기와 엑세스 패턴에 맞는 DB를 설계하세요!</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'convex',
+            slideNumber: 'c/t',
+            plugins: [ RevealHighlight ]
+        });
+    </script>
+</body>
+</html>
