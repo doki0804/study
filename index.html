@@ -20,6 +20,7 @@
         
         .reveal p, .reveal li { font-size: 0.85em; line-height: 1.6; }
         .small-text { font-size: 0.60em; color: #a9b7c6; margin-top: 10px; }
+        .small-text2 { font-size: 0.45em; color: #a9b7c6; margin-top: 8px; }
         
         .highlight { 
             color: #ffeeb2; 
@@ -94,7 +95,7 @@
                 <section>
                     <h2>1. DB란 무엇인가?</h2>
                     <div class="box">
-                        <p>데이터베이스(Database)는 여러 사람이 공유하여 사용할 목적으로 <br><span class="highlight">통합하여 관리되는 데이터의 집합</span>입니다.</p>
+                        <p>데이터베이스(Database)는 여러 사람이 공유하여 사용할 목적으로 <br><span class="highlight">통합하여 관리되는 데이터의 집합</span></p>
                     </div>
                     <ul>
                         <li class="fragment fade-up"><b>중복성 최소화:</b> 엑셀 파일처럼 여기저기 흩어져 있는 것을 방지</li>
@@ -105,7 +106,7 @@
                 <section>
                     <h3>DB의 기본 아키텍처</h3>
                     <img class="img-actual" src="images01.png" alt="DB 핵심 개념 통합 이미지">
-                    <p class="fragment fade-up">사용자의 애플리케이션은 직접 데이터를 조작하지 않고, <br>백엔드 서버(API)를 거쳐 DBMS에 쿼리(Query)를 요청하여 데이터를 다룹니다.</p>
+                    <p class="fragment fade-up">사용자의 애플리케이션은 직접 데이터를 조작하지 않고, <br>백엔드 서버(API)를 거쳐 DBMS에 쿼리(Query)를 요청하여 데이터를 다룬다.</p>
                 </section>
             </section>
 
@@ -113,13 +114,13 @@
                 <section>
                     <h2>2. RDBMS (관계형 DB)</h2>
                     <div class="box">
-                        <p>데이터를 <span class="highlight">행(Row)과 열(Column)로 이루어진 2차원 테이블</span>로 저장하고, <br>테이블 간의 <b>관계(Relationship)</b>를 정의하는 표준적인 DB입니다.</p>
+                        <p>데이터를 <span class="highlight">행(Row)과 열(Column)로 이루어진 2차원 테이블</span>로 저장하고, <br>테이블 간의 <b>관계(Relationship)</b>를 정의하는 표준적인 DB</p>
                     </div>
                 </section>
                 
                 <section>
                     <h3>a. 테이블 (Table) 구조 심화</h3>
-                    <p>컬럼마다 적절한 <b>데이터 타입(Data Type)</b>을 지정해야 합니다.</p>
+                    <p>컬럼마다 적절한 <b>데이터 타입(Data Type)</b>을 지정</p>
                     <table>
                         <tr>
                             <th class="key-col">user_id<br><small>(INT, PK)</small></th>
@@ -151,7 +152,7 @@
 
                 <section>
                     <h3>b. 기본키(PK)와 외래키(FK)</h3>
-                    <p>테이블 간의 <b>참조 무결성(Referential Integrity)</b>을 보장합니다.</p>
+                    <p>테이블 간의 <b>참조 무결성(Referential Integrity)</b>을 보장</p>
                     <div class="flex-container">
                         <div class="flex-item box">
                             <p class="small-text" style="margin-top:0;">[Users 테이블]</p>
@@ -171,8 +172,8 @@
                         </div>
                     </div>
                     <ul class="small-text">
-                        <li class="fragment fade-up"><span class="highlight">Primary Key:</span> 각 레코드를 고유하게 식별합니다. (보통 AUTO_INCREMENT 사용)</li>
-                        <li class="fragment fade-up"><span class="highlight">Foreign Key:</span> 부모 테이블(Users)에 존재하지 않는 `user_id` (예: 9999)는 Orders 테이블에 절대 삽입될 수 없습니다.</li>
+                        <li class="fragment fade-up"><span class="highlight">Primary Key:</span> 각 레코드를 고유하게 식별 (보통 AUTO_INCREMENT 사용)</li>
+                        <li class="fragment fade-up"><span class="highlight">Foreign Key:</span> 부모 테이블(Users)에 존재하지 않는 `user_id` (예: 9999)는 Orders 테이블에 절대 삽입될 수 없음</li>
                     </ul>
                 </section>
 
@@ -206,7 +207,7 @@ WHERE user_id = 1001;
 
                 <section>
                     <h3>d. JOIN (관계 기반 병합)</h3>
-                    <p>별칭(Alias)을 사용하여 여러 테이블의 데이터를 조건에 맞게 결합합니다.</p>
+                    <p>별칭(Alias)을 사용하여 여러 테이블의 데이터를 조건에 맞게 결합</p>
                     <div class="box">
                         <pre style="margin:0;"><code class="language-sql" data-trim>
 SELECT u.username, o.order_id, o.total_amount 
@@ -224,7 +225,7 @@ ORDER BY o.total_amount DESC;
 
                 <section>
                     <h3>e. 트랜잭션과 ACID </h3>
-                    <p>결제와 같이 논리적으로 묶인 작업 단위에서 <b>무결성을 보장하는 4가지 원칙</b>입니다.</p>
+                    <p>결제와 같이 논리적으로 묶인 작업 단위에서 <b>무결성을 보장하는 4가지 원칙</b></p>
                     <div class="box">
                         <pre style="margin:0;"><code class="language-sql" data-trim>
 START TRANSACTION;
@@ -234,10 +235,10 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                         </code></pre>
                     </div>
                     <ul class="small-text" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
-                        <li class="fragment fade-up"><span class="highlight">A (원자성, Atomicity):</span> 쿼리 중 하나라도 실패하면 작업 전체를 취소합니다 (All or Nothing).</li>
-                        <li class="fragment fade-up"><span class="highlight">C (일관성, Consistency):</span> 트랜잭션 전후로 데이터의 제약조건(예: 마이너스 통장 불가)은 항상 지켜져야 합니다.</li>
-                        <li class="fragment fade-up"><span class="highlight">I (고립성, Isolation):</span> 진행 중인 트랜잭션의 '중간 상태'를 다른 트랜잭션이 읽거나 간섭할 수 없습니다.</li>
-                        <li class="fragment fade-up"><span class="highlight">D (지속성, Durability):</span> Commit(완료)된 데이터는 시스템 전원/장애가 발생해도 디스크(WAL, Redo Log 등)에 영구 보존됩니다.</li>
+                        <li class="fragment fade-up"><span class="highlight">A (원자성, Atomicity):</span> 쿼리 중 하나라도 실패하면 작업 전체를 취소 (All or Nothing)</li>
+                        <li class="fragment fade-up"><span class="highlight">C (일관성, Consistency):</span> 트랜잭션 전후로 데이터의 제약조건(예: 마이너스 통장 불가)은 항상 지켜져야 함</li>
+                        <li class="fragment fade-up"><span class="highlight">I (고립성, Isolation):</span> 진행 중인 트랜잭션의 '중간 상태'를 다른 트랜잭션이 읽거나 간섭할 수 없음</li>
+                        <li class="fragment fade-up"><span class="highlight">D (지속성, Durability):</span> Commit(완료)된 데이터는 시스템 전원/장애가 발생해도 디스크(WAL, Redo Log 등)에 영구 보존</li>
                     </ul>
                 </section>
 
@@ -247,22 +248,22 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <div class="flex-container">
                         <div class="flex-item box fragment fade-up">
                             <h4 style="color:#42b983;">👍 장점</h4>
-                            <p class="small-text">O(N)의 풀 스캔(Full Table Scan)을 <b>O(log N)의 인덱스 스캔</b>으로 바꿔 검색 속도를 극대화합니다.</p>
+                            <p class="small-text">O(N)의 풀 스캔(Full Table Scan)을 <b>O(log N)의 인덱스 스캔</b>으로 바꿔 검색 속도를 극대화</p>
                         </div>
                         <div class="flex-item box fragment fade-up">
                             <h4 style="color:#e74c3c;">👎 단점</h4>
-                            <p class="small-text">데이터가 INSERT/UPDATE/DELETE 될 때마다 트리를 재정렬(Page Split 등)해야 하므로 <b>오버헤드 발생 및 추가 스토리지</b>가 필요합니다.</p>
+                            <p class="small-text">데이터가 INSERT/UPDATE/DELETE 될 때마다 트리를 재정렬(Page Split 등)해야 하므로 <b>오버헤드 발생 및 추가 스토리지</b>가 필요</p>
                         </div>
                     </div>
                 </section>
 
                 <section>
-                    <h3>g. 데드락 (Deadlock)</h3>
+                    <h4>g. 데드락 (Deadlock)</h4>
                     <p>복수의 트랜잭션이 서로 <b>Exclusive Lock(배타락)</b>을 점유한 채 대기하는 상태</p>
                     <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e74c3c&text=Tx1(Hold:RowA,+Wait:RowB)+<->+Tx2(Hold:RowB,+Wait:RowA)" alt="데드락">
                     <div class="box fragment fade-up">
-                        <p style="margin:0; font-size:0.7em;"><span class="highlight">발생 예시:</span> Tx1이 1번 게시글을 잠그고 2번을 수정하려 대기 중인데, Tx2는 2번 게시글을 잠그고 1번을 수정하려 대기할 때 발생합니다.</p>
-                        <p class="small-text" style="color:#e7ad52;">👉 DBMS의 Deadlock Detector가 이를 감지하여 작업량이 적은 트랜잭션을 강제 Rollback(취소) 합니다.</p>
+                        <p style="margin:0; font-size:0.7em;"><span class="highlight">발생 예시:</span> Tx1이 1번 게시글을 잠그고 2번을 수정하려 대기 중인데, Tx2는 2번 게시글을 잠그고 1번을 수정하려 대기할 때 발생</p>
+                        <p class="small-text2" style="color:#e7ad52;">👉 DBMS의 Deadlock Detector가 이를 감지하여 작업량이 적은 트랜잭션을 강제 Rollback(취소)</p>
                     </div>
                 </section>
 
@@ -298,7 +299,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
 
                 <section>
                     <h4>② 제2정규형 (2NF)</h4>
-                    <p class="small-text">조건: 1NF 충족 및 <b>기본키의 진부분집합에 종속되는 속성(부분 함수 종속)을 제거한다.</b></p>
+                    <p class="small-text">조건: 1NF 충족 및 <b>기본키의 진부분집합에 종속되는 속성(부분 함수 종속)을 제거</b></p>
                     <div class="box fragment fade-up" style="padding: 10px 20px;">
                         <p style="color:#e74c3c; margin-top:0; font-size:0.8em;">❌ 복합키 [주문번호+상품코드] 중, '상품명'과 '단가'는 '상품코드'에만 완전 종속됨</p>
                         <table style="margin-bottom: 10px;">
@@ -323,7 +324,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
 
                 <section>
                     <h4>③ 제3정규형 (3NF)</h4>
-                    <p class="small-text">조건: 2NF 충족 및 <b>기본키가 아닌 일반 속성들 간의 종속(이행적 함수 종속)을 제거한다.</b></p>
+                    <p class="small-text">조건: 2NF 충족 및 <b>기본키가 아닌 일반 속성들 간의 종속(이행적 함수 종속)을 제거</b></p>
                     <div class="box fragment fade-up" style="padding: 10px 20px;">
                         <p style="color:#e74c3c; margin-top:0; font-size:0.8em;">❌ X->Y->Z 구조. 사원번호 -> 부서코드 -> 부서명, 위치 (부서 정보가 일반 속성에 종속됨)</p>
                         <table style="margin-bottom: 10px;">
@@ -348,7 +349,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                 <section>
                     <h3>i. ERD (Entity-Relationship Diagram)</h3>
                     <div class="box">
-                        <p class="small-text">업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, <br>식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구입니다.</p>
+                        <p class="small-text">업무 요구사항과 정규화 원칙에 따라 설계된 개체(Entity)와 속성, <br>식별자(PK/FK), 관계(Cardinallity)를 시각화한 논리적 모델링 도구</p>
                         <img class="img-actual fragment fade-up" src="images02.png" alt="ERD">
                         <ul class="small-text">
                             <li><b>1:1 (One-to-One):</b> User - UserProfile (수직 분할 시)</li>
@@ -362,12 +363,12 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
             <section>
                 <section>
                     <h2>3. NoSQL (비관계형 DB)</h2>
-                    <p>RDBMS의 스키마 제약과 수평적 확장(Scale-out)의 한계를 극복하기 위해 등장했습니다.</p>
+                    <p>RDBMS의 스키마 제약과 수평적 확장(Scale-out)의 한계를 극복하기 위해 등장</p>
                 </section>
                 <section>
                     <h3>a. 문서형 (Document)</h3>
                     <div class="box">
-                        <p>데이터를 유연한 JSON/BSON 형태로 저장합니다.</p>
+                        <p>데이터를 유연한 JSON/BSON 형태로 저장</p>
                         <pre style="margin-bottom:0;"><code class="language-json" data-trim>
 {
   "_id": ObjectId("507f1f77bcf86cd799439011"),
@@ -385,16 +386,16 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <h3>b. 다양한 NoSQL</h3>
                     <div class="flex-container" style="flex-wrap: wrap;">
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h4 style="color:#42b983;">Key-Value</h4>
-                            <p class="small-text">O(1) 해시 룩업으로 응답 지연시간이 마이크로초 단위.<br>대표: <b>Redis, DynamoDB</b></p>
+                            <h5 style="color:#42b983;">Key-Value</h5>
+                            <p class="small-text2">O(1) 해시 룩업으로 응답 지연시간이 마이크로초 단위.<br>대표: <b>Redis, DynamoDB</b></p>
                         </div>
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h4 style="color:#42b983;">Wide-Column</h4>
-                            <p class="small-text">LSM Tree 구조로 대규모 쓰기 부하와 분산 클러스터링에 최적화.<br>대표: <b>Cassandra, HBase</b></p>
+                            <h5 style="color:#42b983;">Wide-Column</h5>
+                            <p class="small-text2">LSM Tree 구조로 대규모 쓰기 부하와 분산 클러스터링에 최적화.<br>대표: <b>Cassandra, HBase</b></p>
                         </div>
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h4 style="color:#42b983;">Graph</h4>
-                            <p class="small-text">Node, Edge, Property로 구성되어 다중 조인(Multi-hop) 탐색에 압도적 성능.<br>대표: <b>Neo4j</b></p>
+                            <h5 style="color:#42b983;">Graph</h5>
+                            <p class="small-text2">Node, Edge, Property로 구성되어 다중 조인(Multi-hop) 탐색에 압도적 성능.<br>대표: <b>Neo4j</b></p>
                         </div>
                     </div>
                 </section>
@@ -407,12 +408,12 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                 <section>
                     <h3>시계열 DB & 인메모리 DB</h3>
                     <div class="box fragment fade-up">
-                        <h4>🕒 시계열 DB (Time-Series)</h4>
-                        <p class="small-text">타임스탬프를 PK로 삼아 센서, 로그 등 Append-only 데이터를 초당 수백만 건씩 처리하고 압축 저장합니다. (예: InfluxDB, Prometheus)</p>
+                        <h5>🕒 시계열 DB (Time-Series)</h5>
+                        <p class="small-text">타임스탬프를 PK로 삼아 센서, 로그 등 Append-only 데이터를 초당 수백만 건씩 처리하고 압축 저장 (예: InfluxDB, Prometheus)</p>
                     </div>
                     <div class="box fragment fade-up">
-                        <h4>⚡ 인메모리 DB (In-Memory)</h4>
-                        <p class="small-text">디스크 I/O를 배제하고 메모리에 데이터를 올려 Session 관리, 실시간 리더보드, 글로벌 캐싱 아키텍처를 구성합니다. (예: Redis, Memcached)</p>
+                        <h5>⚡ 인메모리 DB (In-Memory)</h5>
+                        <p class="small-text">디스크 I/O를 배제하고 메모리에 데이터를 올려 Session 관리, 실시간 리더보드, 글로벌 캐싱 아키텍처를 구성 (예: Redis, Memcached)</p>
                     </div>
                 </section>
                 <section>
@@ -420,14 +421,14 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <img class="img-actual fragment fade-up" src="image04.png" alt="벡터DB">
                     <div class="box fragment fade-up">
                         <p>LLM 및 RAG(검색 증강 생성) 아키텍처의 뼈대입니다.</p>
-                        <p class="small-text">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행합니다.</p>
+                        <p class="small-text">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행</p>
                     </div>
                 </section>
             </section>
 
             <section>
                 <h2>5. 클라우드 DB (DBaaS)</h2>
-                <p>퍼블릭 클라우드 제공자가 인프라 프로비저닝과 운영을 대행합니다.</p>
+                <p>퍼블릭 클라우드 제공자가 인프라 프로비저닝과 운영을 대행</p>
                 <div class="box fragment fade-up">
                     <ul style="margin:0;">
                         <li><span class="highlight">고가용성 (HA):</span> 다중 AZ(Availability Zone) 복제 및 자동 Failover 지원</li>
@@ -439,13 +440,13 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
 
             <section>
                 <h2>결론</h2>
-                <p>현대의 백엔드는 <br><b>'Polyglot Persistence(다중 저장소 패러다임)'</b>를 지향합니다.</p>
+                <p>현대의 백엔드는 <br><b>'Polyglot Persistence(다중 저장소 패러다임)'</b>를 지향</p>
                 <div class="box fragment fade-up" style="text-align: left; display: inline-block; margin-top: 10px;">
                     <p>✔️ 결제 트랜잭션과 복잡한 비즈니스 로직은 <span class="highlight">RDBMS</span></p>
                     <p>✔️ 대규모 카탈로그나 장바구니 세션은 <span class="highlight">NoSQL</span></p>
                     <p>✔️ 추천 시스템이나 유사도 검색은 <span class="highlight">특화 DB</span></p>
                 </div>
-                <p class="fragment fade-up" style="margin-top:20px; color:#42b983; font-weight:bold;">데이터의 생명주기와 엑세스 패턴에 맞는 DB를 설계하세요!</p>
+                <p class="fragment fade-up" style="margin-top:20px; color:#42b983; font-weight:bold;">데이터의 생명주기와 엑세스 패턴에 맞는 DB의 사용이 중요!</p>
             </section>
 
         </div>
