@@ -87,9 +87,7 @@
         <div class="slides">
             
             <section>
-                <h1>데이터베이스(DB)<br>마스터하기</h1>
-                <p style="color: #42b983; font-size: 1.2em; font-weight: bold; margin-top: 20px;">RDBMS의 A to Z & 최신 DB 트렌드</p>
-                <p style="margin-top: 40px;"><small>만든이: [이름/소속을 입력하세요]</small></p>
+                <h1>데이터베이스(DB)<br>기초 이해</h1>
             </section>
 
             <section>
@@ -225,19 +223,21 @@ ORDER BY o.total_amount DESC;
                 </section>
 
                 <section>
-                    <h3>e. 트랜잭션 (Transaction) 제어</h3>
-                    <p>결제와 같은 작업에서 <b>ACID 속성</b>을 보장하는 논리적 단위입니다.</p>
+                    <h3>e. 트랜잭션과 ACID (완전판)</h3>
+                    <p>결제와 같이 논리적으로 묶인 작업 단위에서 <b>무결성을 보장하는 4가지 원칙</b>입니다.</p>
                     <div class="box">
                         <pre style="margin:0;"><code class="language-sql" data-trim>
 START TRANSACTION;
 UPDATE Accounts SET balance = balance - 50000 WHERE acc_id = 'A';
 UPDATE Accounts SET balance = balance + 50000 WHERE acc_id = 'B';
-COMMIT; -- 문제 발생 시 ROLLBACK;
+COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                         </code></pre>
                     </div>
-                    <ul class="small-text">
-                        <li class="fragment fade-up"><span class="highlight">A (원자성):</span> 쿼리 중 하나라도 실패하면 전체 취소 (All or Nothing)</li>
-                        <li class="fragment fade-up"><span class="highlight">I (고립성):</span> A계좌에서 돈이 빠져나가고 B에 더해지기 전의 '중간 상태'를 다른 트랜잭션이 읽을 수 없음</li>
+                    <ul class="small-text" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+                        <li class="fragment fade-up"><span class="highlight">A (원자성, Atomicity):</span> 쿼리 중 하나라도 실패하면 작업 전체를 취소합니다 (All or Nothing).</li>
+                        <li class="fragment fade-up"><span class="highlight">C (일관성, Consistency):</span> 트랜잭션 전후로 데이터의 제약조건(예: 마이너스 통장 불가)은 항상 지켜져야 합니다.</li>
+                        <li class="fragment fade-up"><span class="highlight">I (고립성, Isolation):</span> 진행 중인 트랜잭션의 '중간 상태'를 다른 트랜잭션이 읽거나 간섭할 수 없습니다.</li>
+                        <li class="fragment fade-up"><span class="highlight">D (지속성, Durability):</span> Commit(완료)된 데이터는 시스템 전원/장애가 발생해도 디스크(WAL, Redo Log 등)에 영구 보존됩니다.</li>
                     </ul>
                 </section>
 
@@ -262,7 +262,7 @@ COMMIT; -- 문제 발생 시 ROLLBACK;
                     <img class="img-placeholder" src="https://dummyimage.com/600x200/222/e74c3c&text=Tx1(Hold:RowA,+Wait:RowB)+<->+Tx2(Hold:RowB,+Wait:RowA)" alt="데드락">
                     <div class="box fragment fade-up">
                         <p style="margin:0; font-size:0.9em;"><span class="highlight">발생 예시:</span> Tx1이 1번 게시글을 잠그고 2번을 수정하려 대기 중인데, Tx2는 2번 게시글을 잠그고 1번을 수정하려 대기할 때 발생합니다.</p>
-                        <p class="small-text" style="color:#e7ad52;">👉 DBMS의 Deadlock Detector가 이를 감지하여 작업량이 적은 트랜잭션을 강제 Rollback 합니다.</p>
+                        <p class="small-text" style="color:#e7ad52;">👉 DBMS의 Deadlock Detector가 이를 감지하여 작업량이 적은 트랜잭션을 강제 Rollback(취소) 합니다.</p>
                     </div>
                 </section>
 
