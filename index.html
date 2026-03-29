@@ -20,7 +20,7 @@
         
         .reveal p, .reveal li { font-size: 0.85em; line-height: 1.6; }
         .small-text { font-size: 0.60em; color: #a9b7c6; margin-top: 10px; }
-        .small-text-2 { font-size: 0.40em; color: #a9b7c6; margin-top: 8px; }
+        .small-text-2 { font-size: 0.35em; color: #a9b7c6; margin-top: 8px; }
         
         .highlight { 
             color: #ffeeb2; 
@@ -386,15 +386,15 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <h3>b. 다양한 NoSQL</h3>
                     <div class="flex-container" style="flex-wrap: wrap;">
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h5 style="color:#42b983;">Key-Value</h5>
+                            <h6 style="color:#42b983;">Key-Value</h6>
                             <p class="small-text-2">O(1) 해시 룩업으로 응답 지연시간이 마이크로초 단위.<br>대표: <b>Redis, DynamoDB</b></p>
                         </div>
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h5 style="color:#42b983;">Wide-Column</h5>
+                            <h6 style="color:#42b983;">Wide-Column</h6>
                             <p class="small-text-2">LSM Tree 구조로 대규모 쓰기 부하와 분산 클러스터링에 최적화.<br>대표: <b>Cassandra, HBase</b></p>
                         </div>
                         <div class="flex-item box fragment fade-up" style="min-width: 45%;">
-                            <h5 style="color:#42b983;">Graph</h5>
+                            <h6 style="color:#42b983;">Graph</h6>
                             <p class="small-text-2">Node, Edge, Property로 구성되어 다중 조인(Multi-hop) 탐색에 압도적 성능.<br>대표: <b>Neo4j</b></p>
                         </div>
                     </div>
@@ -406,7 +406,7 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     <h2>4. 특수 목적 DB</h2>
                 </section>
                 <section>
-                    <h3>시계열 DB & 인메모리 DB</h3>
+                    <h4>시계열 DB & 인메모리 DB</h4>
                     <div class="box fragment fade-up">
                         <h5>🕒 시계열 DB (Time-Series)</h5>
                         <p class="small-text">타임스탬프를 PK로 삼아 센서, 로그 등 Append-only 데이터를 초당 수백만 건씩 처리하고 압축 저장 (예: InfluxDB, Prometheus)</p>
@@ -417,17 +417,17 @@ COMMIT; -- 둘 다 성공 시 반영 (실패 시 ROLLBACK)
                     </div>
                 </section>
                 <section>
-                    <h3>벡터 DB (Vector DB)</h3>
+                    <h4>벡터 DB (Vector DB)</h4>
                     <img class="img-actual fragment fade-up" src="images/image04.png" alt="벡터DB">
                     <div class="box fragment fade-up">
                         <p>LLM 및 RAG(검색 증강 생성) 아키텍처의 뼈대</p>
-                        <p class="small-text">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행</p>
+                        <p class="small-text-2">비정형 데이터(문서, 이미지)를 고차원 벡터(Embeddings)로 변환해 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 코사인 유사도를 연산해 시맨틱 검색을 수행</p>
                     </div>
                 </section>
             </section>
 
             <section>
-                <h2>5. 클라우드 DB (DBaaS)</h2>
+                <h3>5. 클라우드 DB (DBaaS)</h3>
                 <p>퍼블릭 클라우드 제공자가 인프라 프로비저닝과 운영을 대행</p>
                 <div class="box fragment fade-up">
                     <ul style="margin:0;">
